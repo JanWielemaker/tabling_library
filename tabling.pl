@@ -2,8 +2,12 @@
 
 :- use_module(library(lists)).
 
+user:exception(undefined_global_variable, Var, retry) :-
+  format('Creating global val ~q~n', [Var]),
+  nb_setval(Var, []).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Initialize table datastructure exactly once.
+% Initialize table datastructure exactly once.a
 % We way we do it here is ideal...
 :- table_datastructure_initialize.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +48,7 @@ run_leader(Wrapper,Worker,T) :-
 
 exists_scheduling_component :-
   nb_getval(leader,Leader),
-  Leader == []. 
+  Leader == [].
 
 create_scheduling_component :-
   nb_setval(leader,leaderCreated).
