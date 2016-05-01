@@ -18,7 +18,6 @@
 :- use_module(trie).
 :- use_module('batched-worklist').
 :- use_module(gensymlib).
-:- use_module(utils).
 
 % This file defines the table datastructure.
 %

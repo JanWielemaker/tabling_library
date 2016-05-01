@@ -22,30 +22,6 @@
 % where Children is an association list of nonvars to tries.
 % and where MaybeValue is maybe_none/0 or maybe_just(Value).
 
-% An efficient implementation of association lists based on AVL-trees comes with hProlog!
-% use_module(library(assoc)).
-% Operations offered by that module:
-% :- module(assoc, [
-%	assoc_to_list/2,		% Assoc -> List
-%	empty_assoc/1,			% -> Assoc % Benoit: can be used both to create a new assoc and to test whether an existing assoc is empty.
-%	del_assoc/4,			% Key x Assoc x Val -> Assoc
-%	del_max_assoc/4,		% Assoc -> Key x Val x Assoc
-%	del_min_assoc/4,		% Assoc -> Key x Val x Assoc
-%	gen_assoc/3,			% Key x Assoc x Val
-%	get_assoc/3,			% Key x Assoc -> Val
-%	get_assoc/5,			% Key x Assoc x Val -> Assoc x Val
-%	get_next_assoc/4,		% Key x Assoc -> Key x Val
-%	get_prev_assoc/4,		% Key x Assoc -> Key x Val
-%	is_assoc/1,			% Assoc ->
-%	list_to_assoc/2,		% List -> Assoc
-%	map_assoc/2,			% Goal x Assoc ->
-%	map_assoc/3,			% Goal x Assoc -> Assoc
-%	max_assoc/3,			% Assoc -> Key x Val
-%	min_assoc/3,			% Assoc -> Key x Val
-%	ord_list_to_assoc/2,		% List -> Assoc
-%	put_assoc/4			% Key x Assoc x Val -> Assoc
-%    ]).
-
 % PRIVATE
 % For a term of the form p(a,q(b)), "returns" functor_data(p,2) and [a,q(b)].
 % p_trie_arity_univ(+Term,-FunctorData,-ArgumentsList).
