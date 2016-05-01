@@ -116,7 +116,7 @@ add_answer(TableIdentifier,A) :-
 % arg(1,Table,CallVariant),
   arg(3,Table,AnswerTrie),
   arg(4,Table,Worklist),
-  copy_term(A,A2),
+  duplicate_term(A,A2),
   % This predicate succeeds if the answer was new, otherwise it fails.
   trie_insert(AnswerTrie,A2,A2), % Use answer both as key and as value. Having it as value uses memory, but greatly simplifies getting all the answers.
   % We got here, so trie_insert added a new answer.
