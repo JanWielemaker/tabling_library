@@ -18,7 +18,7 @@ print_existing_tables :-
   (
     member(T,Ts),
     get_call_variant(T,V),
-    format('~w~n',[V]),
+    format('~q: ~t~10|~w~n',[T, V]),
     fail
   ;
     format('==~n',[])
@@ -27,8 +27,8 @@ print_existing_tables :-
 print_answers_for_table(T,PrefixText) :-
   get_call_variant(T,V),
   tbd_table_status(T,S),
-  format('ANSWERS FOR TABLE ~w~n',[V]),
-  format('======================~n',[]),
+  format('ANSWERS FOR TABLE ~q (~p)~n',[T, V]),
+  format('================================~n',[]),
   format('Status: ~w~n',[S]),
   (
     get_answer(T,A),
