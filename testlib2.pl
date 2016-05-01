@@ -3,6 +3,8 @@
 	  ]).
 :- use_module(table_link_manager).
 :- use_module(table_datastructure).
+:- use_module(table_print).
+:- use_module(library(terms)).
 
 variant_for_xsb_comparison(_) :-
   throw(not_implemented).			% FIXME, just silence for now.

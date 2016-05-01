@@ -6,7 +6,7 @@
 	    trie_insert/3
 	  ]).
 :- use_module(assoc).
-:- use_module(utils).
+:- use_module(library(lists)).
 
 % Implementation of a prefix tree, a.k.a. trie %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

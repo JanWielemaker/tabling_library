@@ -6,6 +6,8 @@
 	    predicate_list_to_tuple_list/2	% +ListOfTerms, -ListOfTuples
 	  ]).
 :- use_module(table_link_manager).
+:- use_module(library(lists)).
+:- use_module(library(apply)).
 :- meta_predicate
 	foreach_table(1),
 	foreach_table_with_print(1).

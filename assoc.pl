@@ -1,6 +1,8 @@
 :- module(my_assoc,
 	  [ empty_assoc/1,
-	    assoc_to_list/2
+	    assoc_to_list/2,
+	    get_assoc/3,
+	    put_assoc/4
 	  ]).
 
 %   Copyright(C) 1994, Swedish Institute of Computer Science

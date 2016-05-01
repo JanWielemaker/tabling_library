@@ -11,6 +11,7 @@
 	  ]).
 :- use_module(globalWorklist).
 :- use_module(double_linked_list).
+:- use_module(library(lists)).
 
 % A batched worklist: a worklist that clusters suspensions and answers as much as possible.
 % The idea is to minimize the number of swaps. This should be more efficient than the worklist implementation without clustering.
