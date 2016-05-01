@@ -23,11 +23,10 @@ f_expected_answers([1-1,1-2,1-3,2-1,2-2,2-3,3-1,3-2,3-3]).
 autotest(f_compare_answers).
 % TEST: Tests anwers of example 5.
 f_compare_answers :-
-  %format('OLD TEST~n',[]),
-  %compare_real_expected_answers(f,2,f_expected_answers),
   format('NEW TEST~n',[]),
   % Fill the table
   findall(_,f(_,_),_),
+  compare_real_expected_answers(f,2,f_expected_answers),
   get_existing_tables(Ts),
   length(Ts,NumTables),
   format('Number of tables after finding all the answers is: ~w~n', [NumTables]),
