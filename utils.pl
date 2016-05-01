@@ -3,6 +3,7 @@
 	    foreach_table/1,			% +Goal
 	    foreach_table_with_print/1,		% +Goal
 	    list_to_tuple/2,			% +List, -Tuple
+	    predicate_to_tuple/2,		% +Term, -Tuple
 	    predicate_list_to_tuple_list/2	% +ListOfTerms, -ListOfTuples
 	  ]).
 :- use_module(table_link_manager).
