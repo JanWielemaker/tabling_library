@@ -100,7 +100,7 @@ wkl_p_find_new_riac_helper(Worklist,CandidatePointer,NewRiacPointer) :-
     dll_get_pointer_to_previous(CandidatePointer,NewCandidate),
     wkl_p_find_new_riac_helper(Worklist,NewCandidate,NewRiacPointer)
   ).
-  
+
 is_answer_cluster_or_dummy_pointer(Worklist,Pointer) :-
   ( wkl_is_dummy_pointer(Worklist,Pointer) ->
     true
@@ -151,7 +151,7 @@ wkl_add_answer(Worklist,Answer) :-
   ;
     wkl_add_to_new_answer_cluster(Worklist,Answer,AnswerClusterPointer),
     % If the RIAC is the dummy pointer, we need to change that.
-    wkl_p_update_rightmost_inner_answer_cluster_pointer(Worklist,AnswerClusterPointer) 
+    wkl_p_update_rightmost_inner_answer_cluster_pointer(Worklist,AnswerClusterPointer)
   ).
 
 wkl_p_update_rightmost_inner_answer_cluster_pointer(Worklist,NewAnswerClusterPointer) :-
@@ -191,8 +191,8 @@ wkl_add_to_existing_answer_cluster(Worklist, Answer) :-
   dll_get_pointer_to_next(Dll,AnswerClusterPointer),
   wkl_p_dereference_pointer(Worklist,AnswerClusterPointer,AnswerCluster),
   AnswerCluster = wkl_answer_cluster(AnswersAlreadyInCluster),
-  nb_setarg(1,AnswerCluster,[Answer|AnswersAlreadyInCluster]). 
-  
+  nb_setarg(1,AnswerCluster,[Answer|AnswersAlreadyInCluster]).
+
 wkl_add_to_new_answer_cluster(
     wkl_worklist(Dll,_Ria,_FlagExecutingWork,_AlreadyInMetaworklist,_TableIdentifier),
     Answer,AnswerClusterPointer
@@ -222,12 +222,12 @@ wkl_p_is_suspension_cluster(CandidateSuspensionCluster) :-
   CandidateSuspensionCluster = wkl_suspension_cluster(_).
 
 wkl_p_leftmost_cluster_is_answer_cluster(Worklist) :-
-  arg(1,Worklist,Dll), 
+  arg(1,Worklist,Dll),
   dll_get_pointer_to_next(Dll,CandidateAnswerClusterPointer),
   wkl_p_is_answer_cluster_pointer(Worklist,CandidateAnswerClusterPointer).
 
 wkl_p_rightmost_cluster_is_suspension_cluster(Worklist) :-
-  arg(1,Worklist,Dll), 
+  arg(1,Worklist,Dll),
   dll_get_pointer_to_previous(Dll,CandidateSuspensionClusterPointer),
   wkl_p_is_suspension_cluster_pointer(Worklist,CandidateSuspensionClusterPointer).
 
@@ -247,7 +247,7 @@ wkl_p_answer_cluster_currently_moved_completely(Worklist,AnswerClusterPointer) :
 wkl_p_at_right(Worklist,Pointer) :-
   dll_get_pointer_to_next(Pointer,NextPointer),
   wkl_is_dummy_pointer(Worklist,NextPointer).
-  
+
 wkl_p_answer_cluster_on_right(Worklist,Pointer) :-
   dll_get_pointer_to_next(Pointer,NextPointer),
   wkl_p_is_answer_cluster_pointer(Worklist,NextPointer).
@@ -285,4 +285,4 @@ wkl_p_dereference_pointer(_Worklist,Pointer,Data) :-
 %%%%%%%%%%%%%%%%%%
 
 wkl_p_set_rightmost_inner_answer_cluster_pointer(Worklist,AnswerClusterPointer) :-
-  nb_setarg(2,Worklist,AnswerClusterPointer).
+  nb_linkarg(2,Worklist,AnswerClusterPointer).
