@@ -18,10 +18,11 @@ g_expected_answers([1,2,3,4,5]).
 h_expected_answers([0,1,2,3,4]).
 
 autotest(g_compare_answers).
+autotest(h_compare_answers).
+
 g_compare_answers :-
   compare_real_expected_answers(g,1,g_expected_answers).
 
-autotest(h_compare_answers).
 h_compare_answers :-
   compare_real_expected_answers(h,1,h_expected_answers).
 

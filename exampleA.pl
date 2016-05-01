@@ -9,8 +9,12 @@ expected_answers_for_variant(p(_,_),[p(a,1),p(b,2),p(a,2),p(b,1)]).
 expected_answers_for_variant(p(a,_),[p(a,1),p(a,2)]).
 expected_answers_for_variant(p(b,_),[p(b,1),p(b,2)]).
 
-compare_answers :-
-  p(_,_).
+expected_answers([a-1, b-2, a-2, b-1]).
+
+autotest(a_compare_answers).
+a_compare_answers :-
+  compare_real_expected_answers(p,2,expected_answers).
+
 
 % Expected answers:
 %

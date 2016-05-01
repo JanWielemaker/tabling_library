@@ -1,7 +1,8 @@
 :- module(testlib,
 	  [ expect_fail/1,			% +Goal
 	    expect_true/1,			% +Goal
-	    compare_real_expected_answers/3	% :Name, +Arity, :E
+	    compare_real_expected_answers/3,	% :Name, +Arity, :E
+	    compare_expected_all_variants/1	% +AllExpectedAnswers
 	  ]).
 :- use_module(library(lists)).
 :- use_module(utils).

@@ -9,11 +9,16 @@
 % e(X) :- d(Y), Y < 5, X is Y + 1.
 % e(0).
 
-expected_variants([d(_),e(_)]).
 expected_answers_for_variant(d(_),L) :-
-  findall(d(X),between(0,5,X),L).
+  findall(X,between(0,5,X),L).
 expected_answers_for_variant(e(_),L) :-
-  findall(e(X),between(0,5,X),L).
+  findall(X,between(0,5,X),L).
+
+autotest(b_compare_answers).
+
+b_compare_answers :-
+  compare_real_expected_answers(d,1,expected_answers_for_variant(d(_))),
+  compare_real_expected_answers(e,1,expected_answers_for_variant(e(_))).
 
 go :-
   once(d(_)).

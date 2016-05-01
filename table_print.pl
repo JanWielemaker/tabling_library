@@ -1,5 +1,6 @@
 :- module(table_print,
 	  [ print_existing_tables/0,
+	    print_answers_for_all_tables/0,
 	    print_answers_for_table/2,		% +Table, +Prefix
 	    print_answers_for_variant/2		% +Variant, +Prefix
 	  ]).
