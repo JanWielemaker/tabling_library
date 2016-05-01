@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 % RUN TEST by calling go/0
 

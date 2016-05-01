@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 % Simpler example than example12.pl, but the number of predicates involved in mutual recursion will also increase at runtime.
 

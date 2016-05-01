@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 %%% EXAMPLE6 %%%
 % Nested tabling: a tabled predicate calls another tabled predicate, but not mutually recursive.

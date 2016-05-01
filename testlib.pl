@@ -1,4 +1,4 @@
-:- use_module(library(format)).
+:- ['format.pl'].
 :- use_module(library(lists)).
 :- ['utils.pl'].
 

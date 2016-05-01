@@ -1,4 +1,4 @@
-:- use_module(library(format)).
+:- ['format.pl'].
 :- ['table_link_manager.pl'].
 :- ['variantlib.pl'].
 

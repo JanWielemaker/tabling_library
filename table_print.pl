@@ -1,4 +1,4 @@
-:- use_module(library(format)).
+:- ['format.pl'].
 :- ['utils.pl'].
 
 % Routines for printing the table datastructure.

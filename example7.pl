@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 :- writeln('Reminder: call i1_compare_answers, ..., i5_compare_answers').
 

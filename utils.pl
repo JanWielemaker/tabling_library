@@ -1,4 +1,4 @@
-:- use_module(library(format)).
+:- ['format.pl'].
 
 % Predicates of a general nature that may be useful in a lot of places.
 

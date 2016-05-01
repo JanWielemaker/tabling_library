@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 %%%%% EXAMPLE 2 %%%%%%
 % Meerdere recursieve calls met zelfde callpattern:

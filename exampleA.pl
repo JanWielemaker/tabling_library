@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 %%% EXAMPLE A %%%%
 % A simple example to test the version with mutual recursion.

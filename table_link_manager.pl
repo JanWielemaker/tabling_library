@@ -1,7 +1,7 @@
 :- ['trie.pl'].
 :- ['utils.pl'].
 
-:- use_module(library(format)).
+:- ['format.pl'].
 
 % This file defines a call pattern trie.
 %

@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 %%% EXAMPLE 5 %%%%
 % Variation on example 1 but with a cycle. This is an important example for tabling.

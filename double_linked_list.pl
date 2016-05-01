@@ -19,7 +19,7 @@
 %   --------------
 %   front-of-the-list | ... | back-of-the-list
 
-:- use_module(library(format)). % hProlog-specific
+:- ['format.pl']. % hProlog-specific
 
 :- ['utils.pl'].
 

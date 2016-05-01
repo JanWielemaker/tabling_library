@@ -7,7 +7,7 @@
 
 % Inspiration from http://en.wikipedia.org/wiki/Trie
 
-:- use_module(library(format)).
+:- ['format.pl'].
 % :- use_module(library(assoc)).
 % We have copied this code to assoc.pl
 :- ['assoc.pl'].

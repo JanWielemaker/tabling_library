@@ -1,5 +1,5 @@
 :- ['tabling.pl','testlib.pl','table_print.pl'].
-:- use_module(library(format)).
+:- ['format.pl'].
 
 %%%%% EXAMPLE 3: shuttle %%%%%
 % Answers: all integers between -10 and 10 (included).
