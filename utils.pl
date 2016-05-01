@@ -208,12 +208,6 @@ list_to_tuple([First|Rest],Tuple) :-
 % Ai = 'accumulator in'
 to_tuple(E,Ai,Ai-E).
 
-% SWI-Prolog: available in autoloadable library(apply).
-foldl(_FoldFunction,[],Zero,Zero) :- !.
-foldl(FoldFunction,[X|Xs],InAcc,Result) :-
-  call(FoldFunction,X,InAcc,TempAcc),
-  foldl(FoldFunction,Xs,TempAcc,Result).
-
   % Succeeds if L1 and L2 have the same length and their elements are pairwise unifiable.
   % Unificiation on the elements is undone after the test (by using \+ \=)
   % Test results: seems to work OK.
