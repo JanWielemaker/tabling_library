@@ -1,6 +1,7 @@
 :- ['format.pl'].
 :- use_module(library(lists)).
 :- ['utils.pl'].
+:- use_module(library(dialect/hprolog)).
 
 % Notes about testing:
 % - name of a test should start with t_, optionally followed by a number
@@ -59,6 +60,11 @@ expect_lists_equal_sets(E,A) :-
     format('BUG: lists do not represent equal sets. Expected list was ~w, actual list was ~w~n',[E,A])
   ).
 
+:- if(\+current_predicate(remove_duplicates/2)).
+remove_duplicates(List, Unique) :-
+  list_to_set(List, Unique).
+:- endif.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,7 +78,7 @@ compare_real_expected_answers(G,A,E) :-
   list_to_tuple(FreeVarsList,FreeVarsTuple),
   findall(FreeVarsTuple,G2,R),
   expect_same_size(E2,R),
-  expect_lists_equal_sets(E2,R). 
+  expect_lists_equal_sets(E2,R).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,7 +93,7 @@ compare_expected_all_variants(AllExpectedAnswers) :-
   % TODO: now check whether you have had all tables you expected to be there.
 
 compare_expected_all_variants_(AllExpectedAnswers,Table) :-
-  get_call_variant(Table,Variant), 
+  get_call_variant(Table,Variant),
   format('Testing table ~w~n',[Variant]),
   format('=============================~n',[]),
   compare_expected_for_variant(Variant,AllExpectedAnswers).

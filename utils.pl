@@ -11,8 +11,13 @@ print_trail_size :-
   trail_size(S),
   format:format('Trail size is now ~w~n',[S]).
 
+:- if(current_predicate(sysh:internalstat/5)).
 trail_size(S) :-
   sysh:internalstat(3,_,S,_,x).
+:- else.
+trail_size(S) :-
+  statistics(trailused, S).
+:- endif.
 
 % Utility function to construct internal sanity checks, only done in DEBUG mode.
 % Throws an exception when called outside of DEBUG mode.
@@ -146,7 +151,7 @@ test_any_true_bool :-
   any_true_bool([false,false,false,true,false]).
 
 % Expected: fail; works fine
-test2_any_true_bool :- 
+test2_any_true_bool :-
   any_true_bool([false,false,false]).
 
 % any_true_bool: Succeeds if at least one element of the list is the atom 'true'.
