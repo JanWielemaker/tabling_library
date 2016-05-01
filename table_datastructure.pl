@@ -39,12 +39,12 @@ get_newly_created_table_identifiers(NewlyCreatedTableIdentifiers,NumIdentifiers)
   nb_getval(newly_created_table_identifiers,NewlyCreatedTableIdentifiers-NumIdentifiers).
 
 reset_newly_created_table_identifiers :-
-  nb_setval(newly_created_table_identifiers,[]-0).
+  nb_linkval(newly_created_table_identifiers,[]-0).
 
 add_to_newly_created_table_identifiers(TableIdentifier) :-
   nb_getval(newly_created_table_identifiers,L1-Num1),
   Num2 is Num1 + 1,
-  nb_setval(newly_created_table_identifiers,[TableIdentifier|L1]-Num2).
+  nb_linkval(newly_created_table_identifiers,[TableIdentifier|L1]-Num2).
 
 % PRIVATE
 % Mode: + -
@@ -58,7 +58,7 @@ p_create_table(CallVariant,TableIdentifier) :-
   % Create a trie and a worklist.
   trie_new(EmptyTrie),
   wkl_new_worklist(TableIdentifier,NewWorklist),
-  nb_setval(TableIdentifier,table(CallVariant2,fresh,EmptyTrie,NewWorklist)),
+  nb_linkval(TableIdentifier,table(CallVariant2,fresh,EmptyTrie,NewWorklist)),
   p_link_variant_identifier(CallVariant2,TableIdentifier),
   add_to_newly_created_table_identifiers(TableIdentifier).
 
@@ -147,7 +147,7 @@ cleanup_after_complete_(
     table(CallVariant,_ActualOldStatus,AnswerTrie,_Worklist),
     TableIdentifier
   ) :-
-  nb_setval(TableIdentifier,complete_table(CallVariant,AnswerTrie)).
+  nb_linkval(TableIdentifier,complete_table(CallVariant,AnswerTrie)).
 % If necessary for debugging add second clause for complete_table.
 
 % Set status of table TableIdentifier to complete.

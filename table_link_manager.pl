@@ -16,7 +16,7 @@ table_link_manager_initialize :-
     throw('table_link_manager_initialize: already initialized: 2nd call not allowed')
   ;
     trie_new(EmptyTrie),
-    nb_setval(trie_table_link,EmptyTrie)
+    nb_linkval(trie_table_link,EmptyTrie)
   ).
 
 % Succeeds if the table_link_manager_initialize/0 predicate was already called.
@@ -41,7 +41,7 @@ p_link_variant_identifier(Variant,TableIdentifier) :-
   nb_getval(trie_table_link,Trie),
   variant_canonical_representation(Variant,CanonicalRepresentation),
   trie_insert_succeed(Trie,CanonicalRepresentation,TableIdentifier),
-  nb_setval(trie_table_link,Trie).
+  nb_linkval(trie_table_link,Trie).
 
 % Returns a list of existing table identifiers.
 % Rather costly.
