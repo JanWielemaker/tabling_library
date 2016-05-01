@@ -8,7 +8,7 @@ expected_variants([a(_,_)]).
 expected_answers_for_variant(a(_,_),[a(1,2),a(2,3)]).
 
 % The answers we expect for example 1, returned as a list with entries of the form X-Y. The order does not matter.
-a_expected_answers([1-2,1-3]).
+a_expected_answers([1-2,2-3]).
 
 autotest(a_compare_answers).
 % TEST: Tests anwers of example 0.
