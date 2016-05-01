@@ -1,10 +1,24 @@
-:- use_module(library(lists)).
-:- ensure_loaded(['table_link_manager.pl']).
-:- ensure_loaded(['trie.pl']).
-:- ensure_loaded(['batched-worklist.pl']).
-:- ensure_loaded(['gensymlib.pl']).
-:- ensure_loaded(['variantlib.pl']).
-:- ensure_loaded(['utils.pl']).
+:- module(table_datastructure,
+	  [ table_datastructure_initialize/0,
+	    get_answer/2,			% +TableID, -Answer
+	    add_answer/2,			% +TableID, +Answer
+	    get_call_variant/2,			% +TableID, -CallVariant
+	    set_complete_status/1,		% +TableID
+	    set_active_status/1,		% +TableID
+	    tbd_table_status/2,			% +TableID, -Status
+	    table_for_variant/2,		% +Variant, -TableID
+	    get_worklist/2,			% +TableID, -WorkList
+	    store_dependency/2,			% +TableID, +Suspension
+	    cleanup_after_complete/1,		% +TableID
+	    get_newly_created_table_identifiers/2, % NewlyCreatedTableIDs, NumIDs
+	    reset_newly_created_table_identifiers/0,
+	    answers_for_variant/2		% +Variant, -Answers
+	  ]).
+:- use_module(table_link_manager).
+:- use_module(trie).
+:- use_module('batched-worklist').
+:- use_module(gensymlib).
+:- use_module(utils).
 
 % This file defines the table datastructure.
 %

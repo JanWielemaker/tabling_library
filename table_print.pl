@@ -1,5 +1,11 @@
-:- ensure_loaded(['format.pl']).
-:- ensure_loaded(['utils.pl']).
+:- module(table_print,
+	  [ print_existing_tables/0,
+	    print_answers_for_table/2,		% +Table, +Prefix
+	    print_answers_for_variant/2		% +Variant, +Prefix
+	  ]).
+:- use_module(table_link_manager).
+:- use_module(table_datastructure).
+:- use_module(utils).
 
 % Routines for printing the table datastructure.
 % To assist in debugging and for output.

@@ -1,6 +1,16 @@
-:- ensure_loaded(['table_datastructure.pl','batched-worklist.pl','table_print.pl','testlib2.pl','globalWorklist.pl']).
-
+:- module(tabling,
+	  [ start_tabling/2			% +Wrapper, :Worker.
+	  ]).
+:- use_module(double_linked_list).
+:- use_module(table_datastructure).
+:- use_module('batched-worklist').
+:- use_module(table_print).
+:- use_module(testlib2).
+:- use_module(globalWorklist).
 :- use_module(library(lists)).
+
+:- meta_predicate
+	start_tabling(+, 0).
 
 user:exception(undefined_global_variable, Var, retry) :-
   format('Creating global val ~q~n', [Var]),

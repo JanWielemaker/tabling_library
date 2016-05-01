@@ -1,3 +1,17 @@
+:- module(batched_worklist,
+	  [ wkl_add_answer/2,			% +WorkList, +Answer
+	    wkl_add_suspension/2,		% +Worklist, +Suspension
+	    wkl_new_worklist/2,			% +TableID, -WorkList
+	    unset_flag_executing_all_work/1,
+	    unset_global_worklist_presence_flag/1,
+	    set_flag_executing_all_work/1,
+	    wkl_p_get_rightmost_inner_answer_cluster_pointer/2,
+	    wkl_p_swap_answer_continuation/3,
+	    wkl_worklist_work_done/1
+	  ]).
+:- use_module(globalWorklist).
+:- use_module(double_linked_list).
+
 % A batched worklist: a worklist that clusters suspensions and answers as much as possible.
 % The idea is to minimize the number of swaps. This should be more efficient than the worklist implementation without clustering.
 
@@ -31,8 +45,6 @@
 % RIAC = rightmost inner answer cluster
 % FUTRIAC = future rightmost inner answer cluster
 
-:- ensure_loaded(['double_linked_list.pl']).
-:- ensure_loaded(['globalWorklist.pl']).
 
 % Get a new empty worklist.
 wkl_new_worklist(TableIdentifier, wkl_worklist(List,List,false,true,TableIdentifier)) :-
@@ -121,6 +133,9 @@ wkl_clusters_cartesian_product(AnswerCluster,SuspensionCluster) :-
     % Loop base case
     true
   ).
+
+run_worklist_helper(_Suspension, _Answer) :-	% FIXME: just silense
+  throw('not implemented').
 
 wkl_both_flags_unset(wkl_worklist(_Dll,_Riac,false,false,_TableIdentifier)).
 

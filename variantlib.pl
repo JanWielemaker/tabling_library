@@ -1,3 +1,7 @@
+:- module(variantlib,
+	  [ variant/2
+	  ]).
+% FIXME
 :- ensure_loaded(['testlib.pl']).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,9 +41,9 @@ t_variant_alt :-
 % For our purpose we expected M to be 2.
 % ?- variant(X,X).
 %  No more !
-% 
+%
 % ?- variant(f(a,_),f(a,_)).
-% 
+%
 % Yes
 % ?- variant(f(a,X),f(a,X)).
 % No more !

@@ -1,3 +1,7 @@
+:- module(gensymlib,
+	  [ gensym/2
+	  ]).
+
 % Gensym is a library for generating unique symbols (atoms). Such symbols are generated from a base atom which gets a sequence number appended. Of course there is no guarantee that 'catch22' is not an already defined atom and therefore one must be aware that these atoms are only unique in an isolated context.
 %
 % Description copied from http://www.swi-prolog.org/pldoc/man?section=gensym

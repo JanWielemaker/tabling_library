@@ -1,7 +1,17 @@
-:- ensure_loaded(['format.pl']).
+:- module(testlib,
+	  [ expect_fail/1,			% +Goal
+	    expect_true/1,			% +Goal
+	    compare_real_expected_answers/3	% :Name, +Arity, :E
+	  ]).
 :- use_module(library(lists)).
-:- ensure_loaded(['utils.pl']).
+:- use_module(utils).
 :- use_module(library(dialect/hprolog)).
+:- use_module(table_datastructure).
+
+:- meta_predicate
+	expect_fail(0),
+	expect_true(0),
+	compare_real_expected_answers(:,+,1).
 
 % Notes about testing:
 % - name of a test should start with t_, optionally followed by a number
@@ -71,12 +81,12 @@ remove_duplicates(List, Unique) :-
 % G = Name of goal to obtain real answers. Should take A free variables.
 % A = Arity of goal to obtain real answers.
 % E = Name of goal to obtain list of expected answers. Should take one argument.
-compare_real_expected_answers(G,A,E) :-
+compare_real_expected_answers(M:G,A,E) :-
   call(E,E2),
   length(FreeVarsList,A),
   G2 =.. [G|FreeVarsList],
   list_to_tuple(FreeVarsList,FreeVarsTuple),
-  findall(FreeVarsTuple,G2,R),
+  findall(FreeVarsTuple,M:G2,R),
   expect_same_size(E2,R),
   expect_lists_equal_sets(E2,R).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

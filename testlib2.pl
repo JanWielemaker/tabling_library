@@ -1,6 +1,11 @@
-:- ensure_loaded(['format.pl']).
-:- ensure_loaded(['table_link_manager.pl']).
-:- ensure_loaded(['variantlib.pl']).
+:- module(testlib2,
+	  [
+	  ]).
+:- use_module(table_link_manager).
+:- use_module(table_datastructure).
+
+variant_for_xsb_comparison(_) :-
+  throw(not_implemented).			% FIXME, just silence for now.
 
 % Used for automatically comparing the results of the XSB and hProlog version of a benchmark.
 % Requires the presence of variant_for_xsb_comparison/1 facts in the hProlog benchmark file.
@@ -22,7 +27,7 @@ test_expected_variants_present :-
   assert_equal(NumExpected,NumActual,'test_expected_variants_present'),
   % write a note to show that we did the test.
   format:format('test_expected_variants_present succeeded~n',[]).
-  
+
 % uses "private" predicate from table_datastructure.gpp or table_link_manager.gpp depending on the version.
 test_expected_variants_present_([]).
 test_expected_variants_present_([X|Xs]) :-

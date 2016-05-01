@@ -1,3 +1,9 @@
+:- module(global_worklist,
+	  [ add_to_global_worklist/1,
+	    worklist_empty/0,
+	    pop_worklist/1
+	  ]).
+
 add_to_global_worklist(TableIdentifier) :-
   nb_getval(globalWorklist,L1),
   nb_linkval(globalWorklist,[TableIdentifier|L1]).

@@ -1,3 +1,13 @@
+:- module(trie,
+	  [ trie_get_all_values/2,
+	    trie_insert_succeed/3,
+	    trie_lookup/3,
+	    trie_new/1,
+	    trie_insert/3
+	  ]).
+:- use_module(assoc).
+:- use_module(utils).
+
 % Implementation of a prefix tree, a.k.a. trie %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6,13 +16,6 @@
 % ATTENTION: do not use the term functor_data/2; this is used internally here.
 
 % Inspiration from http://en.wikipedia.org/wiki/Trie
-
-:- ensure_loaded('format.pl').
-% :- use_module(library(assoc)).
-% We have copied this code to assoc.pl
-:- ensure_loaded('assoc.pl').
-
-:- ensure_loaded('utils.pl'). % map_component/2 for debugging purposes
 
 % Structure of tries:
 % trie_inner_node(MaybeValue,Children).
@@ -70,10 +73,10 @@ trie_get_maybe_value(trie_inner_node(MaybeValue,_Children),MaybeValue).
 % Destructive update of the association list Children.
 % For internal use.
 trie_set_children(Trie,Children) :-
-  nb_linkarg(2,Trie,Children).
+  nb_setarg(2,Trie,Children).
 
 trie_set_maybe_value(Trie,MaybeValue) :-
-  nb_linkarg(1,Trie,MaybeValue).
+  nb_setarg(1,Trie,MaybeValue).
 
 trie_insert_succeed(Trie,Key,Value) :-
   ( trie_insert(Trie,Key,Value) ->

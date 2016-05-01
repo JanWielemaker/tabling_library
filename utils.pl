@@ -1,4 +1,14 @@
-:- ensure_loaded('format.pl').
+:- module(table_utils,
+	  [ print_trail_size/1,			% +Message
+	    foreach_table/1,			% +Goal
+	    foreach_table_with_print/1,		% +Goal
+	    list_to_tuple/2,			% +List, -Tuple
+	    predicate_list_to_tuple_list/2	% +ListOfTerms, -ListOfTuples
+	  ]).
+:- use_module(table_link_manager).
+:- meta_predicate
+	foreach_table(1),
+	foreach_table_with_print(1).
 
 % Predicates of a general nature that may be useful in a lot of places.
 
@@ -9,7 +19,7 @@ print_trail_size(Message) :-
 % Debugging the trail stack
 print_trail_size :-
   trail_size(S),
-  format:format('Trail size is now ~w~n',[S]).
+  format('Trail size is now ~w~n',[S]).
 
 :- if(current_predicate(sysh:internalstat/5)).
 trail_size(S) :-
@@ -96,7 +106,9 @@ assert_false(Goal) :-
 % Goal should take 1 parameter: the name of the table.
 foreach_table_with_print(Goal) :-
   % Prefixing with module name ('format:') is a hack. I suspect hProlog does not implement modules and meta_predicate completely correct.
-  foreach_table(Goal,format:format('>FOR EACH TABLE\n',[]),format:format('>END FOR EACH TABLE\n', [])).
+  foreach_table(Goal,
+		format('>FOR EACH TABLE\n',[]),
+		format('>END FOR EACH TABLE\n', [])).
 
 % Perform goal for all existing tables
 % Goal should take 1 parameter: the name of the table.

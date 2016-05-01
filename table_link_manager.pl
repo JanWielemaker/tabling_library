@@ -1,7 +1,13 @@
+:- module(table_link_manager,
+	  [ table_link_manager_initialize/0,
+	    table_link_manager_initialized/0,
+	    get_existing_tables/1,		% -Tables
+	    p_existing_table/2,			% +Variant, -TableID
+	    p_link_variant_identifier/2,	% +Variant, -TableID
+	    num_tables/1			% -Count
+	  ]).
 :- ensure_loaded(['trie.pl']).
-:- ensure_loaded(['utils.pl']).
-
-:- ensure_loaded(['format.pl']).
+:- use_module(utils).
 
 % This file defines a call pattern trie.
 %

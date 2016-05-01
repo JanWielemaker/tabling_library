@@ -1,3 +1,16 @@
+:- module(double_linkedlist,
+	  [ dll_new_double_linked_list/1,	% -List
+	    dll_append_right/2,			% !List, +Element
+	    dll_append_left/2,			% !List, +Element
+	    dll_append_right/3,			% !List, +Element, -Pointer
+	    dll_append_left/3,			% !List, +Element, -Pointer
+	    dll_get_data/2,			% +List, -Head
+	    dll_get_pointer_to_next/2,		% +List, -Pointer
+	    dll_get_pointer_to_previous/2,	% +List, -Pointer
+	    dll_is_dummy_pointer/2,		% +List, +Pointer
+	    dll_p_swap_adjacent_elements_/2	% +Pointer1, +Pointer2
+	  ]).
+
 % A circular double linked list
 % =============================
 
@@ -18,10 +31,6 @@
 %   List structure
 %   --------------
 %   front-of-the-list | ... | back-of-the-list
-
-:- ensure_loaded(['format.pl']). % hProlog-specific
-
-:- ensure_loaded(['utils.pl']).
 
 dll_new_double_linked_list(List) :-
   % Nonused cell dll_start at the beginning, points to itself (this is easy when adding elements).
