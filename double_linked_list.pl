@@ -106,10 +106,10 @@ dll_p_swap_adjacent_elements_(PointerA,PointerB) :-
 % Careful: make sure this is called on the actual cell, and not some copy.
 % Mode: + +
 dll_p_set_previous_pointer(Cell,PointerToNewPrevious) :-
-  nb_setarg(3,Cell,PointerToNewPrevious).
+  nb_linkarg(3,Cell,PointerToNewPrevious).
 
 % Private
 % Careful: make sure this is called on the actual cell, and not some copy.
 % Mode: + +
 dll_p_set_next_pointer(Cell,PointerToNewNext) :-
-  nb_setarg(2,Cell,PointerToNewNext).
+  nb_linkarg(2,Cell,PointerToNewNext).
