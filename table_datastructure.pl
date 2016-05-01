@@ -100,9 +100,9 @@ get_call_variant_(complete_table(CallVariant,_AnswerTrie),CallVariant).
 
 add_answer(TableIdentifier,A) :-
   p_get_table_for_identifier(TableIdentifier,Table),
-  arg(1,Table,CallVariant),
+% arg(1,Table,CallVariant),
   arg(3,Table,AnswerTrie),
-  arg(4,Table,Worklist), 
+  arg(4,Table,Worklist),
   copy_term(A,A2),
   % This predicate succeeds if the answer was new, otherwise it fails.
   trie_insert(AnswerTrie,A2,A2), % Use answer both as key and as value. Having it as value uses memory, but greatly simplifies getting all the answers.
@@ -165,11 +165,11 @@ tbd_status_transition_no_check(TableIdentifier,NewStatus) :-
   p_get_table_for_identifier(TableIdentifier,Table),
   tbd_status_transition_no_check_(TableIdentifier,Table,NewStatus).
 
-tbd_status_transition_no_check_(TableIdentifier,Table,NewStatus) :-
+tbd_status_transition_no_check_(_TableIdentifier,Table,NewStatus) :-
     nb_setarg(2,Table,NewStatus).
 
 % Set Table's status to NewStatus if current status is RequiredOldStatus, otherwise throw an exception mentioning CallerAsString: attempt to set NewStatus for table TableIdentifier, but current status was ActualOldStatus instead of RequiredOldStatus
-tbd_status_transition(TableIdentifier,NewStatus,RequiredOldStatus,CallerAsString) :-
+tbd_status_transition(TableIdentifier,NewStatus,_RequiredOldStatus,_CallerAsString) :-
   p_get_table_for_identifier(TableIdentifier,Table),
   tbd_status_transition_no_check_(TableIdentifier,Table,NewStatus).
 

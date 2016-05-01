@@ -21,7 +21,7 @@ trail_size(S) :-
 
 % Utility function to construct internal sanity checks, only done in DEBUG mode.
 % Throws an exception when called outside of DEBUG mode.
-assert_initialized(InitializedCheckPredicate,CheckDescription,ContextualInfo) :-
+assert_initialized(_InitializedCheckPredicate,CheckDescription,_ContextualInfo) :-
   format:format('call to assert_initialized in nondebug mode: ~w~n',[CheckDescription]),
   throw('call to assert_initialized in nondebug mode').
 

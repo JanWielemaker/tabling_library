@@ -93,6 +93,11 @@ trie_insert_1([],FunctorData,Trie,Value) :-
   trie_get_children(Trie,Assoc),
   % You need Assoc twice: once to traverse through it, once keeping it as a whole for insertion using put_assoc/4.
   trie_insert_a(Assoc,Assoc,FunctorData,Trie,Value).
+% Inline the failure and success continuation to avoid a growing trail stack.
+trie_insert_1([First|Rest],FunctorData,Trie,Value) :-
+  trie_get_children(Trie,Assoc),
+  % You need Assoc twice: once to traverse through it, once keeping it as a whole for insertion using put_assoc/4.
+  trie_insert_1_1(Assoc,Assoc,FunctorData,Trie,First,Rest,Value).
 
 % Else part, base case: empty assoc list.
 trie_insert_a(t,Assoc,FunctorData,Trie,Value) :-
@@ -129,11 +134,6 @@ trie_insert_b(=,V,_L,_R,_Assoc,_FunctorData,_Trie,Value) :-
     )
   ).
 
-% Inline the failure and success continuation to avoid a growing trail stack.
-trie_insert_1([First|Rest],FunctorData,Trie,Value) :-
-  trie_get_children(Trie,Assoc),
-  % You need Assoc twice: once to traverse through it, once keeping it as a whole for insertion using put_assoc/4.
-  trie_insert_1_1(Assoc,Assoc,FunctorData,Trie,First,Rest,Value).
 
 % Else part, base case: empty assoc list
 trie_insert_1_1(t,Assoc,FunctorData,Trie,First,Rest,Value) :-
