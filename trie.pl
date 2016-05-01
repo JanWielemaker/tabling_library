@@ -1,9 +1,9 @@
 :- module(trie,
-	  [ trie_get_all_values/2,
+	  [ trie_new/1,				% -Trie
+	    trie_insert/3,			% !Trie, +Key, +Value
 	    trie_insert_succeed/3,
-	    trie_lookup/3,
-	    trie_new/1,
-	    trie_insert/3
+	    trie_lookup/3,			% +Trie, +Key, -Value
+	    trie_get_all_values/2		% +Trie, -Value
 	  ]).
 :- use_module(assoc).
 :- use_module(library(lists)).
@@ -73,10 +73,10 @@ trie_get_maybe_value(trie_inner_node(MaybeValue,_Children),MaybeValue).
 % Destructive update of the association list Children.
 % For internal use.
 trie_set_children(Trie,Children) :-
-  nb_setarg(2,Trie,Children).
+  nb_linkarg(2,Trie,Children).
 
 trie_set_maybe_value(Trie,MaybeValue) :-
-  nb_setarg(1,Trie,MaybeValue).
+  nb_linkarg(1,Trie,MaybeValue).
 
 trie_insert_succeed(Trie,Key,Value) :-
   ( trie_insert(Trie,Key,Value) ->
