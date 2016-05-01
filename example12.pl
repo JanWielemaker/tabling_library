@@ -1,5 +1,5 @@
-:- ['tabling.pl','testlib.pl','table_print.pl'].
-:- ['format.pl'].
+:- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
+:- ensure_loaded(['format.pl']).
 
 expected_variants([f(4),f(3),f(2),f(0),f(1),e(_),d(_)]).
 % Note: f(4) and f(0) are empty tables, but they are there...

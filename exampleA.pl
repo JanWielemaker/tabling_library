@@ -1,5 +1,5 @@
-:- ['tabling.pl','testlib.pl','table_print.pl'].
-:- ['format.pl'].
+:- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
+:- ensure_loaded(['format.pl']).
 
 %%% EXAMPLE A %%%%
 % A simple example to test the version with mutual recursion.

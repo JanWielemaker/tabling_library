@@ -31,8 +31,8 @@
 % RIAC = rightmost inner answer cluster
 % FUTRIAC = future rightmost inner answer cluster
 
-:- ['double_linked_list.pl'].
-:- ['globalWorklist.pl'].
+:- ensure_loaded(['double_linked_list.pl']).
+:- ensure_loaded(['globalWorklist.pl']).
 
 % Get a new empty worklist.
 wkl_new_worklist(TableIdentifier, wkl_worklist(List,List,false,true,TableIdentifier)) :-

@@ -1,7 +1,7 @@
-:- ['trie.pl'].
-:- ['utils.pl'].
+:- ensure_loaded(['trie.pl']).
+:- ensure_loaded(['utils.pl']).
 
-:- ['format.pl'].
+:- ensure_loaded(['format.pl']).
 
 % This file defines a call pattern trie.
 %

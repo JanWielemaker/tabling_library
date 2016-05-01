@@ -1,5 +1,5 @@
-:- ['tabling.pl','testlib.pl','table_print.pl'].
-:- ['format.pl'].
+:- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
+:- ensure_loaded(['format.pl']).
 
 %%% EXAMPLE 5 %%%%
 % Variation on example 1 but with a cycle. This is an important example for tabling.

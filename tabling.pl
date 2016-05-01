@@ -1,4 +1,4 @@
-:- ['table_datastructure.pl','batched-worklist.pl','table_print.pl','testlib2.pl','globalWorklist.pl'].
+:- ensure_loaded(['table_datastructure.pl','batched-worklist.pl','table_print.pl','testlib2.pl','globalWorklist.pl']).
 
 :- use_module(library(lists)).
 

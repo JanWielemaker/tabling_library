@@ -1,5 +1,5 @@
-:- ['format.pl'].
-:- ['utils.pl'].
+:- ensure_loaded(['format.pl']).
+:- ensure_loaded(['utils.pl']).
 
 % Routines for printing the table datastructure.
 % To assist in debugging and for output.

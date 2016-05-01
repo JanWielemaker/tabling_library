@@ -1,10 +1,10 @@
 :- use_module(library(lists)).
-:- ['table_link_manager.pl'].
-:- ['trie.pl'].
-:- ['batched-worklist.pl'].
-:- ['gensymlib.pl'].
-:- ['variantlib.pl'].
-:- ['utils.pl'].
+:- ensure_loaded(['table_link_manager.pl']).
+:- ensure_loaded(['trie.pl']).
+:- ensure_loaded(['batched-worklist.pl']).
+:- ensure_loaded(['gensymlib.pl']).
+:- ensure_loaded(['variantlib.pl']).
+:- ensure_loaded(['utils.pl']).
 
 % This file defines the table datastructure.
 %

@@ -1,6 +1,6 @@
-:- ['format.pl'].
+:- ensure_loaded(['format.pl']).
 :- use_module(library(lists)).
-:- ['utils.pl'].
+:- ensure_loaded(['utils.pl']).
 :- use_module(library(dialect/hprolog)).
 
 % Notes about testing:
