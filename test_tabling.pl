@@ -10,7 +10,9 @@ test_tabling :-
 	run_tests([ tabling_ex1,
 		    tabling_ex2,
 		    tabling_ex3,
-		    tabling_ex4
+		    tabling_ex4,
+		    tabling_ex6,
+		    tabling_ex7
 		  ]).
 
 		 /*******************************
