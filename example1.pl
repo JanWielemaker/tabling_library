@@ -19,12 +19,8 @@ a_compare_answers :-
 go :-
   once(a(_X,_Y)).
 
-a(X,Y) :-
-  start_tabling(a(X,Y),p_aux(X,Y)).
-
-p_aux(X,Y) :-
-  writeln('before'), a(X,Z), writeln('between'),  a(Z,Y).
-p_aux(X,Y) :- e(X,Y).
+:- table a/2.
+a(X,Y) :- e(X,Y).
 
 % Test facts
 e(1,2).
