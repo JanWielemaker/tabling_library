@@ -207,7 +207,7 @@ wkl_add_to_existing_answer_cluster(Worklist, Answer) :-
   dll_get_pointer_to_next(Dll,AnswerClusterPointer),
   wkl_p_dereference_pointer(Worklist,AnswerClusterPointer,AnswerCluster),
   AnswerCluster = wkl_answer_cluster(AnswersAlreadyInCluster),
-  nb_setarg(1,AnswerCluster,[Answer|AnswersAlreadyInCluster]).
+  nb_linkarg(1,AnswerCluster,[Answer|AnswersAlreadyInCluster]).
 
 wkl_add_to_new_answer_cluster(
     wkl_worklist(Dll,_Ria,_FlagExecutingWork,_AlreadyInMetaworklist,_TableIdentifier),
@@ -220,7 +220,7 @@ wkl_add_to_existing_suspension_cluster(Worklist, Suspension) :-
   dll_get_pointer_to_previous(Dll,SuspensionClusterPointer),
   wkl_p_dereference_pointer(Worklist,SuspensionClusterPointer,SuspensionCluster),
   SuspensionCluster = wkl_suspension_cluster(SuspensionsAlreadyInCluster),
-  nb_setarg(1,SuspensionCluster,[Suspension|SuspensionsAlreadyInCluster]).
+  nb_linkarg(1,SuspensionCluster,[Suspension|SuspensionsAlreadyInCluster]).
 
 wkl_add_to_new_suspension_cluster(
     wkl_worklist(Dll,_Ria,_FlagExecutingWork,_AlreadyInMetaworklist,_TableIdentifier),
