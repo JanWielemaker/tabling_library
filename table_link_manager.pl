@@ -6,8 +6,7 @@
 	    p_link_variant_identifier/2,	% +Variant, -TableID
 	    num_tables/1			% -Count
 	  ]).
-:- ensure_loaded(['trie.pl']).
-:- use_module(utils).
+:- use_module(trie).
 
 % This file defines a call pattern trie.
 %
