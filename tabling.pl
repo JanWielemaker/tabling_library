@@ -1,6 +1,8 @@
 :- module(tabling,
 	  [ start_tabling/2,		% +Wrapper, :Worker.
 
+	    abolish_all_tables/0,
+
 	    (table)/1,			% +PI ...
 	    op(1150, fx, table)
 	  ]).
@@ -34,6 +36,20 @@ table_gvar(globalWorklist) :-
   nb_setval(globalWorklist, []).
 table_gvar(leader) :-
   nb_setval(leader, []).
+
+%%	abolish_all_tables
+%
+%	Remove all tables.  Should not be called when tabling is in
+%	progress.
+%
+%	@bug	Check whether tabling is in progress
+
+abolish_all_tables :-
+  nb_delete(trie_table_link),
+  nb_delete(newly_created_table_identifiers),
+  nb_delete(globalWorklist),
+  nb_delete(leader).
+
 
 % Find table and status for the given call variant.
 %
