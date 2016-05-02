@@ -15,15 +15,25 @@
 :- meta_predicate
 	start_tabling(+, 0).
 
-user:exception(undefined_global_variable, Var, retry) :-
-  debug(gvar, 'Creating global var ~q~n', [Var]),
-  nb_setval(Var, []).
+%%	user:exception(+Exception, +Var, -Action)
+%
+%	Realises lazy initialization of table variables.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Initialize table datastructure exactly once.a
-% We way we do it here is ideal...
-:- table_datastructure_initialize.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+user:exception(undefined_global_variable, Var, retry) :-
+  (   table_gvar(Var)
+  ->  true
+  ;   format('Creating global var ~q~n', [Var]),
+      nb_setval(Var, [])
+  ).
+
+table_gvar(trie_table_link) :-
+  table_datastructure_initialize.
+table_gvar(newly_created_table_identifiers) :-
+  table_datastructure_initialize.
+table_gvar(globalWorklist) :-
+  nb_setval(globalWorklist, []).
+table_gvar(leader) :-
+  nb_setval(leader, []).
 
 % Find table and status for the given call variant.
 %

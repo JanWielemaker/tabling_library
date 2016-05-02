@@ -35,17 +35,17 @@
 % Initialization!
 % This predicate should be called exactly once.
 % It throws an exception if it is called more than once.
-table_datastructure_initialize :-
-  ( table_datastructure_initialized ->
-    throw('table_datastructure_initialize: already initialized - 2nd call not allowed')
-  ;
-    % Do initialization
-    table_link_manager_initialize,
-    reset_newly_created_table_identifiers % Put default value in global variable
-  ).
 
-table_datastructure_initialized :-
-  table_link_manager_initialized.
+%%	table_datastructure_initialize
+%
+%	Initializes            the            global            variable
+%	`newly_created_table_identifiers`           and            calls
+%	table_link_manager_initialize/0  to  create   `trie_table_link`.
+%	Normally called by user:exception/3.
+
+table_datastructure_initialize :-
+  table_link_manager_initialize,
+  reset_newly_created_table_identifiers. % Put default value in global variable
 
 % Returns a list of newly created table identifiers since the last call to reset_newly_created_table_identifiers/0, as well as the length of the list.
 get_newly_created_table_identifiers(NewlyCreatedTableIdentifiers,NumIdentifiers) :-

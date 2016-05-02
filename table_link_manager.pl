@@ -1,6 +1,5 @@
 :- module(table_link_manager,
 	  [ table_link_manager_initialize/0,
-	    table_link_manager_initialized/0,
 	    get_existing_tables/1,		% -Tables
 	    p_existing_table/2,			% +Variant, -TableID
 	    p_link_variant_identifier/2,	% +Variant, -TableID
@@ -16,17 +15,15 @@
 
 % This predicate should be called exactly once.
 % It throws an exception if it is called more than once.
-table_link_manager_initialize :-
-  ( table_link_manager_initialized ->
-    throw('table_link_manager_initialize: already initialized: 2nd call not allowed')
-  ;
-    trie_new(EmptyTrie),
-    nb_linkval(trie_table_link,EmptyTrie)
-  ).
 
-% Succeeds if the table_link_manager_initialize/0 predicate was already called.
-table_link_manager_initialized :-
-  \+ nb_getval(trie_table_link,[]).
+%%	table_link_manager_initialize
+%
+%	Initializes the global  variables   `trie_table_link`.  Normally
+%	called from table_datastructure_initialize/0.
+
+table_link_manager_initialize :-
+  trie_new(EmptyTrie),
+  nb_linkval(trie_table_link,EmptyTrie).
 
 % PRIVATE
 % mode: + -
