@@ -5,7 +5,7 @@
 	    trie_lookup/3,			% +Trie, +Key, -Value
 	    trie_get_all_values/2		% +Trie, -Value
 	  ]).
-:- use_module(assoc).
+:- use_module(library(assoc)).
 :- use_module(library(lists)).
 
 % Implementation of a prefix tree, a.k.a. trie %
