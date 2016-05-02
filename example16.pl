@@ -15,7 +15,7 @@ expected_answers_for_variant(f(_),L) :-
 expected_answers_for_variant(g(_),L) :-
   findall(g(X),between(0,5,X),L).
 
-go :- once((d(X), f(Y))).
+go :- once((d(_X), f(_Y))).
 
 % Two mutually recursive predicates:
 % d(X) :- e(Y), Y < 5, X is Y + 1.
