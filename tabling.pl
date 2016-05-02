@@ -1,6 +1,7 @@
 :- module(tabling,
-	  [ start_tabling/2,			% +Wrapper, :Worker.
+	  [ start_tabling/2,		% +Wrapper, :Worker.
 
+	    (table)/1,			% +PI ...
 	    op(1150, fx, table)
 	  ]).
 :- use_module(double_linked_list).
@@ -138,7 +139,7 @@ table_get_work(Table,Answer,Dependency) :-
 
 table_get_work_(Worklist,Answer,Dependency) :-
   worklist_do_all_work(Worklist,Answer,Dependency0), % This will eventually fail
-  copy_term(Dependency0,Dependency).
+  duplicate_term(Dependency0,Dependency).
 table_get_work_(Worklist,_Answer,_Dependency) :-
   unset_flag_executing_all_work(Worklist),
   fail.
