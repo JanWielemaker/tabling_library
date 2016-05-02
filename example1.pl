@@ -21,6 +21,7 @@ go :-
   once(a(_X,_Y)).
 
 :- table a/2.
+a(X,Y) :- writeln('before'), a(X,Z), writeln('between'), a(Z,Y).
 a(X,Y) :- e(X,Y).
 
 % Test facts
