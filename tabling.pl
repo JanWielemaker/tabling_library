@@ -13,7 +13,7 @@
 	start_tabling(+, 0).
 
 user:exception(undefined_global_variable, Var, retry) :-
-  format('Creating global val ~q~n', [Var]),
+  debug(gvar, 'Creating global var ~q~n', [Var]),
   nb_setval(Var, []).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
