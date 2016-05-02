@@ -1,10 +1,12 @@
 :- module(tabling,
-	  [ start_tabling/2			% +Wrapper, :Worker.
+	  [ start_tabling/2,			% +Wrapper, :Worker.
+
+	    op(1150, fx, table)
 	  ]).
 :- use_module(double_linked_list).
 :- use_module(table_datastructure).
 :- use_module('batched-worklist').
-:- use_module(table_print).
+:- use_module(wrapper).
 :- use_module(testlib2).
 :- use_module(globalWorklist).
 :- use_module(library(lists)).

@@ -1,5 +1,7 @@
 :- module(table_wrapper,
-	  [ op(1150, fx, table)
+	  [ (table)/1,			% +Predicates
+
+	    op(1150, fx, table)
 	  ]).
 :- use_module(library(error)).
 
@@ -8,6 +10,15 @@
 	tabled/2.
 :- dynamic
 	user:term_expansion/2.
+
+%%	table(+PredicateIndicators)
+%
+%	Prepare the given PredicateIndicators for tabling.  Can only
+%	be used as a directive.
+
+table(PredicateIndicators) :-
+	throw(error(context_error(nodirective, table(PredicateIndicators)), _)).
+
 
 wrappers(Var) -->
 	{ var(Var), !,
