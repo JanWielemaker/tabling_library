@@ -172,6 +172,5 @@ trie_get_all_values(Trie,Value) :-
   trie_get_maybe_value(Trie,maybe_just(Value)).
 trie_get_all_values(Trie,Value) :-
   trie_get_children(Trie,Children),
-  assoc_to_list(Children,L),
-  member(_Key-ChildTrie,L),
+  gen_assoc(_Key, Children, ChildTrie),
   trie_get_all_values(ChildTrie,Value).
