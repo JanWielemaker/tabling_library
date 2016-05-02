@@ -18,10 +18,10 @@ a_compare_answers :-
 go :-
   once(a(_X,_Y)).
 
-a(X,Y) :-
-  start_tabling(a(X,Y),p_aux(X,Y)).
+:- table a/2.
 
-p_aux(X,Y) :- e(X,Y).
+a(X,Y) :-
+	e(X,Y).
 
 % Test facts
 e(1,2).
