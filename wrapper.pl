@@ -16,8 +16,8 @@
 %	Prepare the given PredicateIndicators for tabling.  Can only
 %	be used as a directive.
 
-table(PredicateIndicators) :-
-	throw(error(context_error(nodirective, table(PredicateIndicators)), _)).
+table(PIList) :-
+	throw(error(context_error(nodirective, table(PIList)), _)).
 
 
 wrappers(Var) -->
@@ -42,21 +42,22 @@ wrappers(Name/Arity) -->
 	},
 	[ table_wrapper:tabled(Head, Module),
 	  (   Head :-
-		 start_tabling(Head, WrappedHead)
+		 start_tabling(Module:Head, WrappedHead)
 	  )
 	].
 
-rename((Head :- Body), (NewHead :- Body)) :- !,
-	rename(Head, NewHead).
-rename((Head --> Body), (NewHead --> Body)) :- !,
-	prolog_load_context(module, Module),
+rename(M:Term0, M:Term, _) :-
+	atom(M), !,
+	rename(Term0, Term, M).
+rename((Head :- Body), (NewHead :- Body), Module) :- !,
+	rename(Head, NewHead, Module).
+rename((Head --> Body), (NewHead --> Body), Module) :- !,
 	functor(Head, Name, Arity),
 	PlainArity is Arity+1,
 	functor(PlainHead, Name, PlainArity),
 	tabled(PlainHead, Module),
 	rename_term(Head, NewHead).
-rename(Head, NewHead) :-
-	prolog_load_context(module, Module),
+rename(Head, NewHead, Module) :-
 	tabled(Head, Module), !,
 	rename_term(Head, NewHead).
 
@@ -75,4 +76,5 @@ user:term_expansion((:- table(Preds)),
 		    ]) :-
 	phrase(wrappers(Preds), Clauses).
 user:term_expansion(Clause, NewClause) :-
-	rename(Clause, NewClause).
+	prolog_load_context(module, Module),
+	rename(Clause, NewClause, Module).
