@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 %%% EXAMPLE 4
 % Two mutually recursive predicates:

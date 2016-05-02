@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 % Example designed to test whether the true in fresh status works fine in case only a continuation is saved.
 % See issue 55.

@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 % This is a simpler example than example5 that also contains a cycle. Test this first.
 

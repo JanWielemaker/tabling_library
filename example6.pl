@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 %%% EXAMPLE6 %%%
 % Nested tabling: a tabled predicate calls another tabled predicate, but not mutually recursive.

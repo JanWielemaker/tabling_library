@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 :- writeln('Reminder: call i1_compare_answers, ..., i5_compare_answers').
 

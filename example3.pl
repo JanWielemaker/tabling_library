@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 %%%%% EXAMPLE 3: shuttle %%%%%
 % Answers: all integers between -10 and 10 (included).

@@ -1,5 +1,4 @@
 :- ensure_loaded(['tabling.pl','testlib.pl','table_print.pl']).
-:- ensure_loaded(['format.pl']).
 
 %d(X) <- e(Y), Y < 5, X is Y + 1.  % Will never run, because e doesn't have any facts
 %d(X) <- d(Y), Y < 20, X is Y + 5. % Should run
@@ -23,7 +22,7 @@
 % d(20)
 % d(22)
 % d(24)
-% 
+%
 % e(5)
 % e(3)
 % e(1)
