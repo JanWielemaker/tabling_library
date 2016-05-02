@@ -42,39 +42,35 @@ expect_true(G) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Requires format/2.
 % E = list that has the expected number of elements
 % A = list that has the actual number of elements
-expect_same_size(E,A) :-
-  length(E,Es), % same_length/2 in library(lists) does not allow to print a detailed error message.
+expect_same_size(E,A,Result) :-
+  length(E,Es),
   length(A,As),
-  (Es == As ->
-    writeln('Success: lists have same size')
-  ;
-    format('BUG: expected list to have ~d elements but it had ~d~n',[Es,As])
+  (   Es == As
+  ->  Result = true
+  ;   print_message(error,
+		    format('expected list to have ~d elements but it had ~d~n',
+			   [Es,As])),
+      Result = false
   ).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Requires format/2.
-% Requires library(lists).
 % Both lists are turned into sets first!
 % E = list having expected elements
 % A = list having actual elements
-expect_lists_equal_sets(E,A) :-
-  remove_duplicates(E,Es), % SWI: list_to_set
-  remove_duplicates(A,As),
-  ((list_difference_eq(As,Es,[]), list_difference_eq(Es,As,[])) -> % SWI: subtract
-      writeln('Success: lists represent equal sets.')
-  ;
-    format('BUG: lists do not represent equal sets. Expected list was ~w, actual list was ~w~n',[E,A])
+expect_lists_equal_sets(E,A,True) :-
+  list_to_set(E,Es), % SWI: list_to_set
+  list_to_set(A,As),
+  (   (   list_difference_eq(As,Es,[]),
+	  list_difference_eq(Es,As,[])
+      )
+  ->  True = true
+  ;   print_message(error, format('lists do not represent equal sets. \c
+				   Expected list was ~p, actual list was ~p',[E,A]))
   ).
-
-:- if(\+current_predicate(remove_duplicates/2)).
-remove_duplicates(List, Unique) :-
-  list_to_set(List, Unique).
-:- endif.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -88,8 +84,9 @@ compare_real_expected_answers(M:G,A,E) :-
   G2 =.. [G|FreeVarsList],
   list_to_tuple(FreeVarsList,FreeVarsTuple),
   findall(FreeVarsTuple,M:G2,R),
-  expect_same_size(E2,R),
-  expect_lists_equal_sets(E2,R).
+  expect_same_size(E2,R,Ok1),
+  expect_lists_equal_sets(E2,R,Ok2),
+  Ok1 == true, Ok2 == true.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -125,8 +122,9 @@ compare_expected_for_variant(V,AE) :-
   format('expected_starting_with: ~w~n',[ExpectedForVariant]),
   predicate_list_to_tuple_list(AA1,AA2),
   format('tuple_list: ~w~n',[AA2]),
-  expect_same_size(ExpectedForVariant,AA2),
-  expect_lists_equal_sets(ExpectedForVariant,AA2).
+  expect_same_size(ExpectedForVariant,AA2,Ok1),
+  expect_lists_equal_sets(ExpectedForVariant,AA2, Ok2),
+  Ok1 == true, Ok2 == true.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % OK
