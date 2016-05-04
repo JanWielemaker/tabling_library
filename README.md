@@ -22,7 +22,7 @@ This repository contains the port to SWI-Prolog.  Summary of changes:
   - Turned examples into test_tabling.pl and added `make check`
   - Added XSB abolish_all_tables/0
 
-Requires GIT version (https://github.com/SWI-Proolog/swipl-devel.pl)
+Requires GIT version (https://github.com/SWI-Prolog/swipl-devel.pl)
 
 ### Status
 
