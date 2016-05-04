@@ -11,7 +11,7 @@
 :- use_module('batched-worklist').
 :- use_module(wrapper).
 :- use_module(testlib2).
-:- use_module(globalWorklist).
+:- use_module(global_worklist).
 :- use_module(library(lists)).
 
 :- meta_predicate
@@ -32,8 +32,8 @@ table_gvar(trie_table_link) :-
   table_datastructure_initialize.
 table_gvar(newly_created_table_identifiers) :-
   table_datastructure_initialize.
-table_gvar(globalWorklist) :-
-  nb_setval(globalWorklist, []).
+table_gvar(table_global_worklist) :-
+  nb_setval(table_global_worklist, []).
 table_gvar(leader) :-
   nb_setval(leader, []).
 
@@ -47,7 +47,7 @@ table_gvar(leader) :-
 abolish_all_tables :-
   nb_delete(trie_table_link),
   nb_delete(newly_created_table_identifiers),
-  nb_delete(globalWorklist),
+  nb_delete(table_global_worklist),
   nb_delete(leader).
 
 

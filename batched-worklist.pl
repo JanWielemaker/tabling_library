@@ -9,7 +9,7 @@
 	    wkl_p_swap_answer_continuation/3,
 	    wkl_worklist_work_done/1
 	  ]).
-:- use_module(globalWorklist).
+:- use_module(global_worklist).
 :- use_module(double_linked_list).
 :- use_module(library(lists)).
 
