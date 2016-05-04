@@ -2,7 +2,7 @@
 
     Author:        Benoit Desouter <Benoit.Desouter@UGent.be>
 		   Jan Wielemaker (SWI-Prolog port)
-    Copyright (c)  2016, Benoit Desouter
+    Copyright (c)  %Y, Benoit Desouter
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -30,41 +30,4 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-
-:- module(test_trie,
-	  [ test_trie/0
-	  ]).
-:- use_module(trie).
-:- use_module(library(plunit)).
-:- use_module(library(debug)).
-
-test_trie :-
-	run_tests([ trie
-		  ]).
-
-:- begin_tests(trie).
-
-test(insert, T2 =@= T) :-
-	T = a(1,2),
-	trie_new(Trie),
-	trie_insert(Trie, T, T),
-	trie_lookup(Trie, T, T2).
-test(insert_bt, T2 =@= T) :-
-	T = a(1,2),
-	trie_new(Trie),
-	freeze_stack,
-	(   trie_insert(Trie, T, T),
-	    trie_lookup(Trie, T, T2),
-	    assertion(T2 =@= T),
-	    fail
-	;   trie_lookup(Trie, T, T2),
-	    assertion(T2 =@= T)
-	).
-
-freeze_stack :-
-	numlist(1, 1000, L),
-	nb_setval(x, L).
-
-:- end_tests(trie).
-
 
