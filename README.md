@@ -8,6 +8,11 @@ Email: Benoit dot Desouter at UGent dot be
 
 ## SWI-Prolog port
 
+### Usage
+
+  - Include `:- use_module('/path/to/tabling_library/tabling').`
+  - Use :- table name/arity, ... .
+
 ### Changes for this port
 
 This repository contains the port to SWI-Prolog.  Summary of changes:
