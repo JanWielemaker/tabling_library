@@ -8,9 +8,8 @@
 	  ]).
 :- use_module(double_linked_list).
 :- use_module(table_datastructure).
-:- use_module('batched-worklist').
+:- use_module(batched_worklist).
 :- use_module(wrapper).
-:- use_module(testlib2).
 :- use_module(global_worklist).
 :- use_module(library(lists)).
 
