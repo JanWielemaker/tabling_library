@@ -33,8 +33,8 @@ table_gvar(newly_created_table_identifiers) :-
   table_datastructure_initialize.
 table_gvar(table_global_worklist) :-
   nb_setval(table_global_worklist, []).
-table_gvar(leader) :-
-  nb_setval(leader, []).
+table_gvar(table_leader) :-
+  nb_setval(table_leader, []).
 
 %%	abolish_all_tables
 %
@@ -47,7 +47,7 @@ abolish_all_tables :-
   nb_delete(trie_table_link),
   nb_delete(newly_created_table_identifiers),
   nb_delete(table_global_worklist),
-  nb_delete(leader).
+  nb_delete(table_leader).
 
 
 % Find table and status for the given call variant.
@@ -85,14 +85,14 @@ run_leader(Wrapper,Worker,T) :-
   unset_scheduling_component.
 
 exists_scheduling_component :-
-  nb_getval(leader,Leader),
+  nb_getval(table_leader,Leader),
   Leader == [].
 
 create_scheduling_component :-
-  nb_setval(leader,leaderCreated).
+  nb_setval(table_leader,leaderCreated).
 
 unset_scheduling_component :-
-  nb_setval(leader,[]).
+  nb_setval(table_leader,[]).
 
 set_all_complete :-
   get_newly_created_table_identifiers(Ts,_NumIdentifiers),
