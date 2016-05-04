@@ -5,7 +5,7 @@
 	    compare_expected_all_variants/1	% +AllExpectedAnswers
 	  ]).
 :- use_module(library(lists)).
-:- use_module(utils).
+:- use_module(table_utils).
 :- use_module(library(dialect/hprolog)).
 :- use_module(table_datastructure).
 

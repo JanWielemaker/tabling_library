@@ -6,7 +6,7 @@
 	  ]).
 :- use_module(table_link_manager).
 :- use_module(table_datastructure).
-:- use_module(utils).
+:- use_module(table_utils).
 :- use_module(library(lists)).
 
 % Routines for printing the table datastructure.
