@@ -32,63 +32,96 @@
 */
 
 :- module(batched_worklist,
-	  [ wkl_add_answer/2,			% +WorkList, +Answer
-	    wkl_add_suspension/2,		% +Worklist, +Suspension
-	    wkl_new_worklist/2,			% +TableID, -WorkList
-	    unset_flag_executing_all_work/1,
-	    unset_global_worklist_presence_flag/1,
-	    set_flag_executing_all_work/1,
-	    wkl_p_get_rightmost_inner_answer_cluster_pointer/2,
-	    wkl_p_swap_answer_continuation/3,
-	    wkl_worklist_work_done/1
+	  [ wkl_add_answer/2,				% +WorkList, +Answer
+	    wkl_add_suspension/2,			% +Worklist, +Suspension
+	    wkl_new_worklist/2,				% +TableID, -WorkList
+	    unset_flag_executing_all_work/1,		% +WorkList
+	    unset_global_worklist_presence_flag/1,	% +WorkList
+	    set_flag_executing_all_work/1,		% +WorkList
+	    wkl_p_get_rightmost_inner_answer_cluster_pointer/2, % +WorkList, -Cluster
+	    wkl_p_swap_answer_continuation/3,		% +WorkList, +Cluster1, +Cluster2
+	    wkl_worklist_work_done/1			% +WorkList
 	  ]).
 :- use_module(global_worklist).
 :- use_module(double_linked_list).
 :- use_module(library(lists)).
 
-% A batched worklist: a worklist that clusters suspensions and answers as much as possible.
-% The idea is to minimize the number of swaps. This should be more efficient than the worklist implementation without clustering.
+/** <module> Tabling Worklist management
 
-% Argument positions for nb_setarg:
-% 1: double linked list
-% 2: pointer to the list entry of the rightmost inner answer cluster
-% 3: flag indicating the execution of wkl_unfolded_do_all_work
-% 4: flag indicating whether the table identifier associated with this worklist is already in the global worklist. This is because more than one answer can be added due to the execution of other worklists.
-% 5: table identifier for the table this worklist belongs to
+A batched worklist: a worklist that  clusters suspensions and answers as
+much as possible. The idea is  to   minimize  the  number of swaps. This
+should be more  efficient  than   the  worklist  implementation  without
+clustering.
 
-% Contents of a batched worklist:
-% wkl_answer_cluster([Answer|RestAnswers]).
-% wkl_suspension([Suspension|RestSuspension]).
+Argument positions for nb_setarg:
 
-% The difficulty is that you should not add new entries to a cluster once you started its execution. Probably the simplest way to do so is by swapping the answer cluster AC and suspension cluster SC before you take the cartesian product of all answers in AC with all suspensions in SC.
+ 1. double linked list
+ 2. pointer to the list entry of the rightmost inner answer cluster
+ 3. flag indicating the execution of wkl_unfolded_do_all_work
+ 4. flag indicating whether the table identifier associated with this
+    worklist is already in the global worklist. This is because more
+    than one answer can be added due to the execution of other
+    worklists. 5: table identifier for the table this worklist belongs
+    to
 
-% Illustration why you may need a complex procedure for finding the future rightmost inner answer cluster.
-% Assume all clusters have 2 entries.
-% 1) AA1 CC1
-% 2) AA2 CC1 AA1 CC2 (swapped AA1 and CC1)
-% 3) AA2 CC1 CC2 AA1 (swapped AA1 and CC2)
-% 4) AA3 CC1 AA2 CC2 AA1 CC3 (swapped AA2 and CC1)
+Contents of a batched worklist:
+
+ - wkl_answer_cluster([Answer|RestAnswers]).
+ - wkl_suspension([Suspension|RestSuspension]).
+
+The difficulty is that you should not add  new entries to a cluster once
+you started its execution. Probably the  simplest   way  to  do so is by
+swapping the answer cluster AC and suspension cluster SC before you take
+the cartesian product of all answers in AC with all suspensions in SC.
+
+Illustration why you may need a complex procedure for finding the future
+rightmost inner answer cluster.
+
+ssume all clusters have 2 entries.
+
+ 1. AA1 CC1
+ 2. AA2 CC1 AA1 CC2 (swapped AA1 and CC1)
+ 3. AA2 CC1 CC2 AA1 (swapped AA1 and CC2)
+ 4. AA3 CC1 AA2 CC2 AA1 CC3 (swapped AA2 and CC1)
+
+Now AA1 is the RIAC, but AA2 is the future RIAC.
+
+Can you find the future RIAC smarter than by walking back? If you don't,
+then it doesn't make sense to use a future  RIAC at all. You could use a
+stack, which should not grow too  large   because  you  use batches. But
+walking back also should not take too long, since you use batches.
+
+So let's not use a future RIAC in   the  first place, and just walk back
+when we need a new RIAC. This is   easy  to implement, hence we can test
+more quickly.
+
+Abbreviations:
+
+ - RIAC = rightmost inner answer cluster
+ - FUTRIAC = future rightmost inner answer cluster
+*/
+
+%%	wkl_new_worklist(+TableID, -WorkList) is det.
 %
-% Now AA1 is the RIAC, but AA2 is the future RIAC.
-%
-% Can you find the future RIAC smarter than by walking back? If you don't, then it doesn't make sense to use a future RIAC at all. You could use a stack, which should not grow too large because you use batches. But walking back also should not take too long, since you use batches.
+%	Create a new worklist for  TableID  and   add  it  to the global
+%	worklist list (global variable `table_global_worklist`.
 
-% So let's not use a future RIAC in the first place, and just walk back when we need a new RIAC. This is easy to implement, hence we can test more quickly.
-
-% Abbreviations:
-% RIAC = rightmost inner answer cluster
-% FUTRIAC = future rightmost inner answer cluster
-
-
-% Get a new empty worklist.
 wkl_new_worklist(TableIdentifier, wkl_worklist(List,List,false,true,TableIdentifier)) :-
   dll_new_double_linked_list(List),
   % We set the RIAC to the dummy element at the start of the double linked list, which is List.
   % Don't set all the rest for now.
   add_to_global_worklist(TableIdentifier).
 
-% The work is done if the RIAC pointer points to the unused cell at the beginning.
-% The work is also done if the RIAC pointer points to the sole answer cluster in a list dll_start - wkl_answer_cluster, because in that case there are no suspensions to swap with. This is a special case, which we only discovered by testing. You can detect it by checking whether the NEXT-pointer of the RIAC is the dummy pointer.
+%%	wkl_worklist_work_done(+WorkList) is semidet.
+%
+%	The work is done if the RIAC   pointer points to the unused cell
+%	at the beginning. The work is  also   done  if  the RIAC pointer
+%	points to the  sole  answer  cluster   in  a  list  dll_start  -
+%	wkl_answer_cluster,  because  in  that   case    there   are  no
+%	suspensions to swap with. This is a  special case, which we only
+%	discovered by testing. You can detect it by checking whether the
+%	NEXT-pointer of the RIAC is the dummy pointer.
+
 wkl_worklist_work_done(Worklist) :-
   wkl_p_get_rightmost_inner_answer_cluster_pointer(Worklist,RiacPointer),
   ( wkl_is_dummy_pointer(Worklist,RiacPointer) ->
