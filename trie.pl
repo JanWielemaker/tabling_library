@@ -33,13 +33,30 @@
 
 :- module(trie,
 	  [ trie_new/1,				% -Trie
+	    trie_insert/2,			% !Trie, +Key
 	    trie_insert/3,			% !Trie, +Key, +Value
 	    trie_insert_succeed/3,
 	    trie_lookup/3,			% +Trie, +Key, -Value
 	    trie_get_all_values/2		% +Trie, -Value
 	  ]).
+
+:- if(true).					% built-in tries
+trie_insert(Trie, Key) :-
+%	debug(trie, 'Insert ~p into ~p~n', [Key, Trie]),
+	trie_insert(Trie, Key, true).
+
+trie_insert_succeed(Trie, Key, Value) :-
+	trie_insert(Trie, Key, Value), !.
+trie_insert_succeed(_,_,_).
+
+trie_get_all_values(Trie, Key) :-
+%	debug(trie, 'Enumerate ~p~n', [Trie]),
+	trie_gen(Trie, Key, _).
+
+:- else.					% Prolog tries
 :- use_module(library(assoc)).
 :- use_module(library(lists)).
+
 
 % Implementation of a prefix tree, a.k.a. trie %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,6 +110,10 @@ trie_insert_succeed(Trie,Key,Value) :-
   ;
     true
   ).
+
+trie_insert(Trie,Key) :-
+%  duplicate_term(Key, Copy),
+  trie_insert(Trie, Key, Key).
 
 % Succeeds if the term was not present, fails if the term was present.
 % The term will be present now, whatever the outcome.
@@ -207,3 +228,5 @@ trie_get_all_values(Trie,Value) :-
   trie_get_children(Trie,Children),
   gen_assoc(_Key, Children, ChildTrie),
   trie_get_all_values(ChildTrie,Value).
+
+:- endif.
