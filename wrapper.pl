@@ -38,10 +38,10 @@
 :- use_module(library(error)).
 
 :- multifile
-	user:term_expansion/2,
+	system:term_expansion/2,
 	tabled/2.
 :- dynamic
-	user:term_expansion/2.
+	system:term_expansion/2.
 
 %%	table(+PredicateIndicators)
 %
@@ -102,11 +102,11 @@ rename_term(Name, WrapName) :-
 	atom_concat(Name, ' tabled', WrapName).
 
 
-user:term_expansion((:- table(Preds)),
+system:term_expansion((:- table(Preds)),
 		    [ (:- multifile table_wrapper:tabled/2)
 		    | Clauses
 		    ]) :-
 	phrase(wrappers(Preds), Clauses).
-user:term_expansion(Clause, NewClause) :-
+system:term_expansion(Clause, NewClause) :-
 	prolog_load_context(module, Module),
 	rename(Clause, NewClause, Module).
