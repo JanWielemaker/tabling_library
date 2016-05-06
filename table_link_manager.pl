@@ -82,7 +82,7 @@ p_link_variant_identifier(Variant,TableIdentifier) :-
 % Rather costly.
 get_existing_tables(Ts) :-
   nb_getval(trie_table_link,Trie),
-  findall(T,trie_get_all_values(Trie,T),Ts).
+  findall(T, trie_gen(Trie,_K, T),Ts).
 
 % A very unefficient way of implementing this predicate. But it is only used for unit testing, so it doesn't really matter.
 % Also, it doesn't require any additional bookkeeping during the actual execution.
