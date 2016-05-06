@@ -155,7 +155,7 @@ activate(Wrapper,Worker,T) :-
   ).
 
 delim(Wrapper,Worker,Table) :-
-   reset(Worker,Continuation,SourceCall),
+   reset(Worker,SourceCall,Continuation),
    ( Continuation == 0 ->
      add_answer(Table,Wrapper)
    ;
