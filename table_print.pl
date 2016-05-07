@@ -34,7 +34,9 @@
 :- module(table_print,
 	  [ print_existing_tables/0,
 	    print_answers_for_all_tables/0,
+	    print_answers_for_table/1,		% +Table
 	    print_answers_for_table/2,		% +Table, +Prefix
+	    print_answers_for_variant/1,	% +Variant
 	    print_answers_for_variant/2		% +Variant, +Prefix
 	  ]).
 :- use_module(table_link_manager).
@@ -52,7 +54,7 @@ print_existing_tables :-
   (
     member(T,Ts),
     get_call_variant(T,V),
-    format('~q: ~t~10|~w~n',[T, V]),
+    format('~q: ~t~10|~p~n',[T, V]),
     fail
   ;
     format('==~n',[])
@@ -64,14 +66,9 @@ print_answers_for_table(T,PrefixText) :-
   format('ANSWERS FOR TABLE ~q (~p)~n',[T, V]),
   format('================================~n',[]),
   format('Status: ~w~n',[S]),
-  (
-    get_answer(T,A),
-    write(PrefixText),
-    format('~w~n',[A]),
-    fail
-  ;
-    format('==~n',[])
-  ).
+  forall(get_answer(T,A),
+	 format('~w~p~n', [PrefixText, A])),
+  format('==~n',[]).
 
 print_answers_for_table(T) :-
   print_answers_for_table(T,'').
