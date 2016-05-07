@@ -62,7 +62,7 @@ table_link_manager_initialize :-
 % mode: + -
 % Variant is not modified
 variant_canonical_representation(Variant,CanonicalRepresentation) :-
-  copy_term(Variant,CanonicalRepresentation),
+  duplicate_term(Variant,CanonicalRepresentation),
   numbervars(CanonicalRepresentation,0,_N).
 
 % Succeeds if there is a table TableIdentifier in existance for the given call variant Variant.

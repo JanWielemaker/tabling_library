@@ -98,7 +98,7 @@ add_to_newly_created_table_identifiers(TableIdentifier) :-
 % Created in the fresh status.
 p_create_table(CallVariant,TableIdentifier) :-
   % We use a copy_term here so that we can be sure not to corrupt our table if CallVariant is "changed" afterwards.
-  copy_term(CallVariant,CallVariant2),
+  duplicate_term(CallVariant,CallVariant2),
   % Generate a table identifier, create the table and do bookkeeping.
   gensym(table,TableIdentifier),
   % Create a trie and a worklist.
@@ -221,7 +221,7 @@ tbd_status_transition(TableIdentifier,NewStatus,_RequiredOldStatus,_CallerAsStri
 
 store_dependency(TableIdentifier,Suspension) :-
   p_get_table_for_identifier(TableIdentifier,table(_CallVariant,_Status,_AnswerTrie,Worklist)),
-  copy_term(Suspension,SuspensionCopy),
+  duplicate_term(Suspension,SuspensionCopy),
   wkl_add_suspension(Worklist,SuspensionCopy).
 
 % Get the worklist from the table identified by TableIdentifier
