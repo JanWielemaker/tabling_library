@@ -156,16 +156,19 @@ activate(Wrapper,Worker,T) :-
   ).
 
 delim(Wrapper,Worker,Table) :-
-   debug(tabling, 'ACT: ~p on ~p~n', [Wrapper, Table]),
+   debug(tabling, 'ACT: ~p on ~p', [Wrapper, Table]),
    reset(Worker,SourceCall,Continuation),
    ( Continuation == 0 ->
-     debug(tabling, 'ADD: ~p~n', [Wrapper]),
-     add_answer(Table,Wrapper)
+     (	 add_answer(Table,Wrapper)
+     ->	 debug(tabling, 'ADD: ~p', [Wrapper])
+     ;	 debug(tabling, 'DUP: ~p', [Wrapper]),
+	 fail
+     )
    ;
      SourceCall = call_info(_,SourceTable),
      TargetCall = call_info(Wrapper,Table),
      Dependency = dependency(SourceCall,Continuation,TargetCall),
-     debug(tabling, 'DEP: ~p: ~p~n', [SourceTable,Dependency]),
+     debug(tabling, 'DEP: ~p: ~p', [SourceTable,Dependency]),
      store_dependency(SourceTable,Dependency)
    ).
 
