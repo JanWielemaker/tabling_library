@@ -45,6 +45,7 @@
 :- use_module(wrapper).
 :- use_module(global_worklist).
 :- use_module(library(lists)).
+:- use_module(library(debug)).
 
 :- meta_predicate
 	start_tabling(+, 0).
@@ -155,13 +156,16 @@ activate(Wrapper,Worker,T) :-
   ).
 
 delim(Wrapper,Worker,Table) :-
+   debug(tabling, 'ACT: ~p on ~p~n', [Wrapper, Table]),
    reset(Worker,SourceCall,Continuation),
    ( Continuation == 0 ->
+     debug(tabling, 'ADD: ~p~n', [Wrapper]),
      add_answer(Table,Wrapper)
    ;
      SourceCall = call_info(_,SourceTable),
      TargetCall = call_info(Wrapper,Table),
      Dependency = dependency(SourceCall,Continuation,TargetCall),
+     debug(tabling, 'DEP: ~p: ~p~n', [SourceTable,Dependency]),
      store_dependency(SourceTable,Dependency)
    ).
 
