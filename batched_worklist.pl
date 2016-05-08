@@ -224,14 +224,18 @@ potentially_add_to_global_worklist(Worklist) :-
     true
   ).
 
-wkl_add_answer(Worklist,Answer) :-
+%%	wkl_add_answer(+Worklist, +AnswerH)
+%
+%	@arg AnswerH is a handle to the new answer term in the trie.
+
+wkl_add_answer(Worklist,AnswerH) :-
   % Add to global worklist if not executing during wkl_unfolded_do_all_work and not there yet as well.
   potentially_add_to_global_worklist(Worklist),
   ( wkl_p_leftmost_cluster_is_answer_cluster(Worklist) ->
-    wkl_add_to_existing_answer_cluster(Worklist,Answer)
+    wkl_add_to_existing_answer_cluster(Worklist,AnswerH)
     % If you add to an existing cluster, then obviously you should not change the RIAC.
   ;
-    wkl_add_to_new_answer_cluster(Worklist,Answer,AnswerClusterPointer),
+    wkl_add_to_new_answer_cluster(Worklist,AnswerH,AnswerClusterPointer),
     % If the RIAC is the dummy pointer, we need to change that.
     wkl_p_update_rightmost_inner_answer_cluster_pointer(Worklist,AnswerClusterPointer)
   ).
@@ -268,18 +272,18 @@ wkl_p_potential_rias_update_add_contin(Worklist,SuspensionClusterPointer) :-
     true
   ).
 
-wkl_add_to_existing_answer_cluster(Worklist, Answer) :-
+wkl_add_to_existing_answer_cluster(Worklist, AnswerH) :-
   arg(1,Worklist,Dll),
   dll_get_pointer_to_next(Dll,AnswerClusterPointer),
   wkl_p_dereference_pointer(Worklist,AnswerClusterPointer,AnswerCluster),
   AnswerCluster = wkl_answer_cluster(AnswersAlreadyInCluster),
-  nb_linkarg(1,AnswerCluster,[Answer|AnswersAlreadyInCluster]).
+  nb_linkarg(1,AnswerCluster,[AnswerH|AnswersAlreadyInCluster]).
 
 wkl_add_to_new_answer_cluster(
     wkl_worklist(Dll,_Ria,_FlagExecutingWork,_AlreadyInMetaworklist,_TableIdentifier),
-    Answer,AnswerClusterPointer
+    AnswerH,AnswerClusterPointer
   ) :-
-  dll_append_left(Dll,wkl_answer_cluster([Answer]),AnswerClusterPointer).
+  dll_append_left(Dll,wkl_answer_cluster([AnswerH]),AnswerClusterPointer).
 
 wkl_add_to_existing_suspension_cluster(Worklist, Suspension) :-
   arg(1,Worklist,Dll),

@@ -149,12 +149,10 @@ add_answer(TableIdentifier,A) :-
 % arg(1,Table,CallVariant),
   arg(3,Table,AnswerTrie),
   arg(4,Table,Worklist),
-  duplicate_term(A,A2),
-  % This predicate succeeds if the answer was new, otherwise it fails.
-  trie_insert(AnswerTrie,A2), % Use answer both as key and as value. Having it as value uses memory, but greatly simplifies getting all the answers.
-  % We got here, so trie_insert added a new answer.
-  % We must also insert this answer in the worklist
-  wkl_add_answer(Worklist,A2).
+  trie_insert_new(AnswerTrie,A,H),
+  % We got here, so trie_insert_new added a new answer.
+  % We must also insert this answer into the worklist
+  wkl_add_answer(Worklist,H).
 
 get_answer(TableIdentifier,A) :-
   p_get_table_for_identifier(TableIdentifier,Table),

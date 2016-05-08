@@ -223,5 +223,6 @@ worklist_do_all_work(Worklist,Answer,Dependency) :-
   wkl_p_swap_answer_continuation(Worklist,ACP,SCP),
   dll_get_data(ACP,wkl_answer_cluster(AList)),
   dll_get_data(SCP,wkl_suspension_cluster(SList)),
-  member(Answer,AList),
+  member(AnswerH,AList),
+  trie_term(AnswerH,Answer),
   member(Dependency,SList).
