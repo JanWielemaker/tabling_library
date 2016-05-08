@@ -77,7 +77,7 @@ the cartesian product of all answers in AC with all suspensions in SC.
 Illustration why you may need a complex procedure for finding the future
 rightmost inner answer cluster.
 
-ssume all clusters have 2 entries.
+Assume all clusters have 2 entries.
 
  1. AA1 CC1
  2. AA2 CC1 AA1 CC2 (swapped AA1 and CC1)
