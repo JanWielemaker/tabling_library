@@ -12,6 +12,7 @@
 	    cleanup_after_complete/1,		% +TableID
 	    get_newly_created_table_identifiers/2, % NewlyCreatedTableIDs, NumIDs
 	    reset_newly_created_table_identifiers/0,
+	    delete_table/1,			% +TableID
 	    answers_for_variant/2		% +Variant, -Answers
 	  ]).
 :- use_module(library(apply_macros)).
@@ -248,3 +249,18 @@ get_worklist(TableIdentifier,Worklist) :-
   ;
     throw('get_worklist called on complete table!')
   ).
+
+%%	delete_table(+TableID) is det.
+%
+%	Delete a table and its worklist.
+
+delete_table(TableID) :-
+  p_get_table_for_identifier(TableID,Table),
+  delete_table_(Table),
+  nb_delete(TableID).
+
+delete_table_(table(_CallVariant,_Status,Trie,Worklist)) :-
+  trie_destroy(Trie),
+  destroy_worklist(Worklist).
+delete_table_(complete_table(_CallVariant, Trie)) :-
+  trie_destroy(Trie).

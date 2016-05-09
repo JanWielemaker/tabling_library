@@ -93,17 +93,22 @@ table_and_status_for_variant(V,T,S) :-
 
 start_tabling(Wrapper,Worker) :-
   table_and_status_for_variant(Wrapper,T,S),
-  ( S == complete ->
-    get_answer(T,Wrapper)
-  ;
-    ( exists_scheduling_component ->
-      run_leader(Wrapper,Worker,T),
-      % Now answer the original query!
-      get_answer(T,Wrapper)
-    ;
-      run_follower(S,Wrapper,Worker,T)
-    )
+  (   S == complete
+  ->  get_answer(T,Wrapper)
+  ;   (   exists_scheduling_component
+      ->  catch(run_leader(Wrapper,Worker,T), E,
+		cleanup(E)),
+          % Now answer the original query!
+	  get_answer(T,Wrapper)
+      ;   run_follower(S,Wrapper,Worker,T)
+      )
   ).
+
+cleanup(E) :-
+  delete_incomplete_tables,
+  unset_scheduling_component,
+  empty_worklist,
+  throw(E).
 
 run_follower(fresh,Wrapper,Worker,T) :-
   activate(Wrapper,Worker,T),
@@ -139,21 +144,22 @@ set_all_complete_([T|Ts]) :-
 
 cleanup_all_complete :-
   get_newly_created_table_identifiers(Ts,_NumIdentifiers),
-  cleanup_all_complete_(Ts).
+  maplist(cleanup_after_complete, Ts).
 
-cleanup_all_complete_([]).
-cleanup_all_complete_([T|Ts]) :-
-  cleanup_after_complete(T),
-  cleanup_all_complete_(Ts).
+delete_incomplete_tables :-
+  get_newly_created_table_identifiers(Ts,_NumIdentifiers),
+  maplist(clean_table_on_error, Ts),
+  reset_newly_created_table_identifiers.
+
+clean_table_on_error(T) :-
+  (   tbd_table_status(T, complete)
+  ->  true
+  ;   delete_table(T)
+  ).
 
 activate(Wrapper,Worker,T) :-
   set_active_status(T),
-  (
-    delim(Wrapper,Worker,T),
-    fail
-  ;
-    true
-  ).
+  forall(delim(Wrapper,Worker,T), true).
 
 delim(Wrapper,Worker,Table) :-
    debug(tabling, 'ACT: ~p on ~p', [Wrapper, Table]),
