@@ -35,13 +35,14 @@
 	  [ dll_new_double_linked_list/1,	% -List
 	    dll_append_right/2,			% !List, +Element
 	    dll_append_left/2,			% !List, +Element
-	    dll_append_right/3,			% !List, +Element, -Pointer
-	    dll_append_left/3,			% !List, +Element, -Pointer
+	    dll_append_right/3,			% !List, +Element, -Cell
+	    dll_append_left/3,			% !List, +Element, -Cell
+	    dll_member/2,		        % +List, -Value
 	    dll_get_data/2,			% +List, -Head
-	    dll_get_pointer_to_next/2,		% +List, -Pointer
-	    dll_get_pointer_to_previous/2,	% +List, -Pointer
-	    dll_is_dummy_pointer/2,		% +List, +Pointer
-	    dll_p_swap_adjacent_elements_/2	% +Pointer1, +Pointer2
+	    dll_get_pointer_to_next/2,		% +Cell, -Cell
+	    dll_get_pointer_to_previous/2,	% +Cell, -Cell
+	    dll_is_dummy_pointer/2,		% +List, +Cell
+	    dll_p_swap_adjacent_elements_/2	% +Cell, +Cell
 	  ]).
 
 % A circular double linked list
@@ -112,6 +113,18 @@ dll_get_data(dll_cell(Data,_PointerNext,_PointerPrevious),Data).
 
 dll_is_dummy_pointer(List,Pointer) :-
   \+ Pointer \= List.
+
+dll_member(List, Value) :-
+  List = dll_cell(dll_start,First,_Last),
+  First \== List,
+  dll_member(List, First, Value).
+
+dll_member(List, dll_cell(Value0, Next, _), Value) :-
+  (   Value = Value0
+  ;   Next \== List,
+      dll_member(List, Next, Value)
+  ).
+
 
 % Special case of swapping - used in dll_swap/2.
 % This is also the case used for swapping a freshly created list with itself.

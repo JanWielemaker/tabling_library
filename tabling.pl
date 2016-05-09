@@ -204,7 +204,7 @@ table_get_work(Table,Answer,Dependency) :-
 
 table_get_work_(Worklist,Answer,Dependency) :-
   worklist_do_all_work(Worklist,Answer,DependencyRec), % This will eventually fail
-  recorded(table_suspensions, Dependency, DependencyRec).
+  instance(DependencyRec, Dependency).
 table_get_work_(Worklist,_Answer,_Dependency) :-
   unset_flag_executing_all_work(Worklist),
   fail.

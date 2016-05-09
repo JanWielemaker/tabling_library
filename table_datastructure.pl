@@ -14,7 +14,10 @@
 	    reset_newly_created_table_identifiers/0,
 	    answers_for_variant/2		% +Variant, -Answers
 	  ]).
+:- use_module(library(apply_macros)).
+:- use_module(library(occurs)).
 :- use_module(table_link_manager).
+:- use_module(double_linked_list).
 :- use_module(trie).
 /*  Part of SWI-Prolog
 
@@ -182,17 +185,32 @@ answers_for_variant(V,LA) :-
 set_active_status(TableIdentifier) :-
   tbd_status_transition(TableIdentifier,active,fresh,'set_active_status').
 
+%%	cleanup_after_complete(+TableIdentifier)
+%
+%	Turns the table into its more compact completed form, dropping
+%	the status and worklist.
+
 cleanup_after_complete(TableIdentifier) :-
   p_get_table_for_identifier(TableIdentifier,Table),
   cleanup_after_complete_(Table,TableIdentifier).
 
 % Clause for a (noncomplete) table.
 cleanup_after_complete_(
-    table(CallVariant,_ActualOldStatus,AnswerTrie,_Worklist),
+    table(CallVariant,_ActualOldStatus,AnswerTrie,Worklist),
     TableIdentifier
   ) :-
+  destroy_worklist(Worklist),
   nb_linkval(TableIdentifier,complete_table(CallVariant,AnswerTrie)).
 % If necessary for debugging add second clause for complete_table.
+
+destroy_worklist(Worklist) :-
+  arg(1, Worklist, DLL),
+  forall(dll_member(DLL, Element),
+	 forall(sub_term(T, Element),
+		(   current_blob(T, record)
+		->  erase(T)
+		;   true
+		))).
 
 % Set status of table TableIdentifier to complete.
 set_complete_status(TableIdentifier) :-
