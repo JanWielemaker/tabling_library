@@ -219,8 +219,8 @@ tbd_status_transition(TableIdentifier,NewStatus,_RequiredOldStatus,_CallerAsStri
 
 store_dependency(TableIdentifier,Suspension) :-
   p_get_table_for_identifier(TableIdentifier,table(_CallVariant,_Status,_AnswerTrie,Worklist)),
-  duplicate_term(Suspension,SuspensionCopy),
-  wkl_add_suspension(Worklist,SuspensionCopy).
+  recorda(table_suspensions, Suspension, SuspensionRec),
+  wkl_add_suspension(Worklist,SuspensionRec).
 
 % Get the worklist from the table identified by TableIdentifier
 get_worklist(TableIdentifier,Worklist) :-

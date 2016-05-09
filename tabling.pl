@@ -203,8 +203,8 @@ table_get_work(Table,Answer,Dependency) :-
   table_get_work_(Worklist,Answer,Dependency).
 
 table_get_work_(Worklist,Answer,Dependency) :-
-  worklist_do_all_work(Worklist,Answer,Dependency0), % This will eventually fail
-  duplicate_term(Dependency0,Dependency).
+  worklist_do_all_work(Worklist,Answer,DependencyRec), % This will eventually fail
+  recorded(table_suspensions, Dependency, DependencyRec).
 table_get_work_(Worklist,_Answer,_Dependency) :-
   unset_flag_executing_all_work(Worklist),
   fail.
