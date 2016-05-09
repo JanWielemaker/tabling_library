@@ -66,8 +66,7 @@ p_existing_table(Variant,TableIdentifier) :-
 % Important remark: we cannot use an out-of-the-box association list, because we need a lookup based on variant checking, which is not available for such lists. Converting the association list to a regular list => why would you use an association list in the first place...
 p_link_variant_identifier(Variant,TableIdentifier) :-
   nb_getval(trie_table_link,Trie),
-  trie_insert_succeed(Trie,Variant,TableIdentifier),
-  nb_linkval(trie_table_link,Trie).
+  trie_insert_succeed(Trie,Variant,TableIdentifier).
 
 % Returns a list of existing table identifiers.
 % Rather costly.
