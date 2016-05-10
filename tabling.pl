@@ -77,6 +77,7 @@ table_gvar(table_leader) :-
 %	progress.
 %
 %	@bug	Check whether tabling is in progress
+%	@bug	Better aggressively delete tries and records
 
 abolish_all_tables :-
   nb_delete(trie_table_link),
@@ -192,14 +193,13 @@ completion :-
   ).
 
 completion_step(SourceTable) :-
-  (
-    table_get_work(SourceTable,Answer,dependency(Source,Continuation,Target)),
-    Source = call_info(Answer,_),
-    Target = call_info(Wrapper,TargetTable),
-    delim(Wrapper,Continuation,TargetTable),
-    fail
-  ;
-    true
+  debug(tabling(completion), 'Completion step on table ~q', [SourceTable]),
+  (   table_get_work(SourceTable,Answer,dependency(Source,Continuation,Target)),
+      Source = call_info(Answer,_),
+      Target = call_info(Wrapper,TargetTable),
+      delim(Wrapper,Continuation,TargetTable),
+      fail
+  ;   true
   ).
 
 table_get_work(Table,Answer,Dependency) :-
@@ -207,6 +207,7 @@ table_get_work(Table,Answer,Dependency) :-
   % NOT IN PAPER (could be part of the definition of pop_worklist):
   unset_global_worklist_presence_flag(Worklist),
   set_flag_executing_all_work(Worklist),
+  debug(tabling(worklist), 'Work for ~p: ~p', [Table, Worklist]),
   table_get_work_(Worklist,Answer,Dependency).
 
 table_get_work_(Worklist,Answer,Dependency) :-
@@ -228,6 +229,7 @@ worklist_do_all_work(Worklist,Answer,Dependency) :-
  worklist_do_step(Worklist,Answer,Dependency) :-
   wkl_p_get_rightmost_inner_answer_cluster_pointer(Worklist,ACP),
   wkl_p_swap_answer_continuation(Worklist,ACP,SCP),
+  debug(tabling(worklist), 'Got ACP=~p, SCP=~p', [ACP, SCP]),
   dll_get_data(ACP,wkl_answer_cluster(AList)),
   dll_get_data(SCP,wkl_suspension_cluster(SList)),
   member(AnswerH,AList),
