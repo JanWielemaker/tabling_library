@@ -109,7 +109,7 @@ p_create_table(CallVariant,TableIdentifier) :-
   % Create a trie and a worklist.
   trie_new(EmptyTrie),
   wkl_new_worklist(TableIdentifier,NewWorklist),
-  nb_linkval(TableIdentifier,table(CallVariant2,fresh,EmptyTrie,NewWorklist)),
+  nb_setval(TableIdentifier,table(CallVariant2,fresh,EmptyTrie,NewWorklist)),
   p_link_variant_identifier(CallVariant2,TableIdentifier),
   add_to_newly_created_table_identifiers(TableIdentifier).
 
