@@ -39,6 +39,7 @@
 	    trie_lookup/3,			% +Trie, +Key, -Value
 	    trie_get_all_values/2		% +Trie, -Value
 	  ]).
+:- set_prolog_flag(generate_debug_info, false).
 
 :- if(true).					% built-in tries
 trie_insert(Trie, Key) :-

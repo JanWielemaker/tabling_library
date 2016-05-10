@@ -39,6 +39,7 @@
 	    num_tables/1			% -Count
 	  ]).
 :- use_module(trie).
+:- set_prolog_flag(generate_debug_info, false).
 
 % This file defines a call pattern trie.
 %

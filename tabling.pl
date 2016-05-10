@@ -46,6 +46,7 @@
 :- use_module(global_worklist).
 :- use_module(library(lists)).
 :- use_module(library(debug)).
+:- set_prolog_flag(generate_debug_info, false).
 
 :- meta_predicate
 	start_tabling(+, 0).

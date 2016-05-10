@@ -45,6 +45,7 @@
 :- use_module(global_worklist).
 :- use_module(double_linked_list).
 :- use_module(library(lists)).
+:- set_prolog_flag(generate_debug_info, false).
 
 /** <module> Tabling Worklist management
 

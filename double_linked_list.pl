@@ -44,6 +44,7 @@
 	    dll_is_dummy_pointer/2,		% +List, +Cell
 	    dll_p_swap_adjacent_elements_/2	% +Cell, +Cell
 	  ]).
+:- set_prolog_flag(generate_debug_info, false).
 
 % A circular double linked list
 % =============================

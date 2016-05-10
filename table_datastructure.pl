@@ -1,25 +1,3 @@
-:- module(table_datastructure,
-	  [ table_datastructure_initialize/0,
-	    get_answer/2,			% +TableID, -Answer
-	    add_answer/2,			% +TableID, +Answer
-	    get_call_variant/2,			% +TableID, -CallVariant
-	    set_complete_status/1,		% +TableID
-	    set_active_status/1,		% +TableID
-	    tbd_table_status/2,			% +TableID, -Status
-	    table_for_variant/2,		% +Variant, -TableID
-	    get_worklist/2,			% +TableID, -WorkList
-	    store_dependency/2,			% +TableID, +Suspension
-	    cleanup_after_complete/1,		% +TableID
-	    get_newly_created_table_identifiers/2, % NewlyCreatedTableIDs, NumIDs
-	    reset_newly_created_table_identifiers/0,
-	    delete_table/1,			% +TableID
-	    answers_for_variant/2		% +Variant, -Answers
-	  ]).
-:- use_module(library(apply_macros)).
-:- use_module(library(occurs)).
-:- use_module(table_link_manager).
-:- use_module(double_linked_list).
-:- use_module(trie).
 /*  Part of SWI-Prolog
 
     Author:        Benoit Desouter <Benoit.Desouter@UGent.be>
@@ -53,8 +31,31 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
+:- module(table_datastructure,
+	  [ table_datastructure_initialize/0,
+	    get_answer/2,			% +TableID, -Answer
+	    add_answer/2,			% +TableID, +Answer
+	    get_call_variant/2,			% +TableID, -CallVariant
+	    set_complete_status/1,		% +TableID
+	    set_active_status/1,		% +TableID
+	    tbd_table_status/2,			% +TableID, -Status
+	    table_for_variant/2,		% +Variant, -TableID
+	    get_worklist/2,			% +TableID, -WorkList
+	    store_dependency/2,			% +TableID, +Suspension
+	    cleanup_after_complete/1,		% +TableID
+	    get_newly_created_table_identifiers/2, % NewlyCreatedTableIDs, NumIDs
+	    reset_newly_created_table_identifiers/0,
+	    delete_table/1,			% +TableID
+	    answers_for_variant/2		% +Variant, -Answers
+	  ]).
+:- use_module(library(apply_macros)).
+:- use_module(library(occurs)).
+:- use_module(table_link_manager).
+:- use_module(double_linked_list).
+:- use_module(trie).
 :- use_module(batched_worklist).
 :- use_module(library(gensym)).
+:- set_prolog_flag(generate_debug_info, false).
 
 % This file defines the table datastructure.
 %
