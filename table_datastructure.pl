@@ -57,22 +57,21 @@
 :- use_module(library(gensym)).
 :- set_prolog_flag(generate_debug_info, false).
 
-% This file defines the table datastructure.
-%
-% The table datastructure contains the following sub-structures:
-% - the answer trie
-% - the worklist
-%
-% Structure for tables:
-% table(CallVariant,Status,AnswerTrie,Worklist) or complete_table(CallVariant,AnswerTrie).
-% where AnswerTrie contains a trie of unique answers
-%
-% Remember that a table may also be nonexistent!
-% nb_getval(nonexistent,X) then gives [].
+/** <module> Table datastructure
+This file defines the table datastructure.
 
-% Initialization!
-% This predicate should be called exactly once.
-% It throws an exception if it is called more than once.
+The table datastructure contains the following sub-structures:
+
+  - the answer trie
+  - the worklist
+
+Structure for tables:
+
+  - table(CallVariant,Status,AnswerTrie,Worklist) or
+  - complete_table(CallVariant,AnswerTrie).
+
+Where AnswerTrie contains a trie of unique answer variants
+*/
 
 %%	table_datastructure_initialize
 %

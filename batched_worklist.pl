@@ -62,8 +62,8 @@ Argument positions for nb_setarg:
  4. flag indicating whether the table identifier associated with this
     worklist is already in the global worklist. This is because more
     than one answer can be added due to the execution of other
-    worklists. 5: table identifier for the table this worklist belongs
-    to
+    worklists.
+ 5. table identifier for the table this worklist belongs to.
 
 Contents of a batched worklist:
 
