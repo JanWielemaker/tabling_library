@@ -85,7 +85,7 @@ rename((Head :- Body), (NewHead :- Body), Module) :- !,
 	rename(Head, NewHead, Module).
 rename((Head --> Body), (NewHead --> Body), Module) :- !,
 	functor(Head, Name, Arity),
-	PlainArity is Arity+1,
+	PlainArity is Arity+2,
 	functor(PlainHead, Name, PlainArity),
 	tabled(PlainHead, Module),
 	rename_term(Head, NewHead).
