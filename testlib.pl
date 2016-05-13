@@ -40,7 +40,6 @@
 :- use_module(library(lists)).
 :- use_module(table_utils).
 :- use_module(library(dialect/hprolog)).
-:- use_module(table_datastructure).
 
 :- meta_predicate
 	expect_fail(0),
