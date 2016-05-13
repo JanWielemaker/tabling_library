@@ -39,61 +39,38 @@
 	    print_answers_for_variant/1,	% +Variant
 	    print_answers_for_variant/2		% +Variant, +Prefix
 	  ]).
-:- use_module(table_link_manager).
-:- use_module(table_datastructure).
+:- use_module(tabling).
 :- use_module(table_utils).
-:- use_module(library(lists)).
 
 % Routines for printing the table datastructure.
 % To assist in debugging and for output.
 
 print_existing_tables :-
-  get_existing_tables(Ts),
-  format('EXISTING TABLES~n',[]),
-  format('===============~n',[]),
-  (
-    member(T,Ts),
-    get_call_variant(T,V),
-    format('~q: ~t~10|~p~n',[T, V]),
-    fail
-  ;
-    format('==~n',[])
-  ).
+	format('EXISTING TABLES~n',[]),
+	format('===============~n',[]),
+	forall(current_table(Variant, Trie),
+	       format('~q: ~t~10|~p~n',[Trie, Variant])),
+	format('==~n',[]).
 
-print_answers_for_table(T,PrefixText) :-
-  get_call_variant(T,V),
-  tbd_table_status(T,S),
-  format('ANSWERS FOR TABLE ~q (~p)~n',[T, V]),
-  format('================================~n',[]),
-  format('Status: ~w~n',[S]),
-  forall(get_answer(T,A),
-	 format('~w~p~n', [PrefixText, A])),
-  format('==~n',[]).
+print_answers_for_table(Trie, PrefixText) :-
+	current_table(Variant, Trie),
+	'$tbl_table_status'(Trie, Status),
+	format('ANSWERS FOR TABLE ~q (~p)~n',[Trie, Variant]),
+	format('================================~n',[]),
+	format('Status: ~w~n',[Status]),
+	forall(trie_gen(Trie, A, _),
+	       format('~w~p~n', [PrefixText, A])),
+	format('==~n',[]).
 
-print_answers_for_table(T) :-
-  print_answers_for_table(T,'').
+print_answers_for_table(Trie) :-
+	print_answers_for_table(Trie,'').
 
-print_answers_for_variant(V,PrefixText) :-
-  table_for_variant(V,T),
-  print_answers_for_table(T,PrefixText).
+print_answers_for_variant(Variant,PrefixText) :-
+	current_table(Variant, Trie),
+	print_answers_for_table(Trie, PrefixText).
 
 print_answers_for_variant(V) :-
-  print_answers_for_variant(V,'').
+	print_answers_for_variant(V,'').
 
 print_answers_for_all_tables :-
-  foreach_table_with_print(print_answers_for_table).
-
-% Print a continuation C in human readable form.
-% At the moment: print the first two components.
-print_readable_continuation(Suspension) :-
-  format('Suspension: ~w\n',[Suspension]).
-
-print_continuations_for_table(_T) :-
-  throw('call to deprecated predicate print_continuations for table - use print_worklist from table_datastructure.pl').
-
-print_continuations_for_variant(V) :-
-  table_for_variant(V,T),
-  print_continuations_for_table(T).
-
-print_continuations_for_all_tables :-
-  foreach_table_with_print(print_continuations_for_table).
+	foreach_table_with_print(print_answers_for_table).
