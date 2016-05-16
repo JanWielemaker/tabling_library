@@ -74,7 +74,6 @@ run_follower(fresh, Wrapper, Worker, Trie) :- !,
 	activate(Wrapper, Worker, Trie, Worklist),
 	shift(call_info(Wrapper, Worklist)).
 run_follower(Worklist, Wrapper, _Worker, _Trie) :-
-	assertion(is_worklist(Worklist)),
 	shift(call_info(Wrapper, Worklist)).
 
 is_worklist(Worklist) :-
@@ -93,18 +92,12 @@ activate(Wrapper, Worker, Trie, WorkList) :-
 	).
 
 delim(Wrapper, Worker, WorkList) :-
-	debug(tabling, 'ACT: ~p on ~p', [Wrapper, WorkList]),
 	reset(Worker,SourceCall,Continuation),
 	(   Continuation == 0
-	->  (   '$tbl_wkl_add_answer'(WorkList, Wrapper)
-	    ->	debug(tabling, 'ADD: ~p', [Wrapper])
-	    ;	debug(tabling, 'DUP: ~p', [Wrapper]),
-		fail
-	    )
+	->  '$tbl_wkl_add_answer'(WorkList, Wrapper)
 	;   SourceCall = call_info(_,      SourceWL),
 	    TargetCall = call_info(Wrapper,WorkList),
 	    Dependency = dependency(SourceCall,Continuation,TargetCall),
-	    debug(tabling, 'DEP: ~p: ~p', [SourceWL, Dependency]),
 	    '$tbl_wkl_add_suspension'(SourceWL, Dependency)
 	).
 
