@@ -95,9 +95,9 @@ delim(Wrapper, Worker, WorkList) :-
 	reset(Worker,SourceCall,Continuation),
 	(   Continuation == 0
 	->  '$tbl_wkl_add_answer'(WorkList, Wrapper)
-	;   SourceCall = call_info(_,      SourceWL),
-	    TargetCall = call_info(Wrapper,WorkList),
-	    Dependency = dependency(SourceCall,Continuation,TargetCall),
+	;   SourceCall = call_info(SrcWrapper, SourceWL),
+	    TargetCall = call_info(Wrapper,    WorkList),
+	    Dependency = dependency(SrcWrapper,Continuation,TargetCall),
 	    '$tbl_wkl_add_suspension'(SourceWL, Dependency)
 	).
 
@@ -109,15 +109,16 @@ completion :-
 	'$tbl_table_complete_all'.
 
 completion_step(SourceTable) :-
-	(   '$tbl_wkl_work'(SourceTable,
-			   Answer,
-			   dependency(Source,Continuation,Target)),
-	    Source = call_info(Answer,_),
-	    Target = call_info(Wrapper,TargetTable),
+	(   '$tbl_wkl_work'(SourceTable, Answer, Dependency),
+	    dep(Answer, Dependency, Wrapper,Continuation,TargetTable),
 	    delim(Wrapper,Continuation,TargetTable),
 	    fail
 	;   true
 	).
+
+dep(Answer, dependency(Answer, Continuation, call_info(Wrapper, TargetTable)),
+    Wrapper, Continuation,TargetTable).
+
 
 
 		 /*******************************
