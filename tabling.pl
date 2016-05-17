@@ -76,9 +76,6 @@ run_follower(fresh, Wrapper, Worker, Trie) :- !,
 run_follower(Worklist, Wrapper, _Worker, _Trie) :-
 	shift(call_info(Wrapper, Worklist)).
 
-is_worklist(Worklist) :-
-	integer(Worklist).		% pointer
-
 run_leader(Wrapper, Worker, Trie) :-
 	activate(Wrapper, Worker, Trie, _Worklist),
 	completion,
