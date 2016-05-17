@@ -47,3 +47,17 @@ Pretty experimental.
   - Deal with exceptions
   - Add more table management predicates from XSB.
   - Much more
+
+### Branches
+
+  - **master** contains a minimal port.  Runs with the `master`
+  branch of `swipl-devel.git`.
+  - **builtin-trie** uses a C implementation of the tries to
+  store answers.  Requires the branch `trie` of `swipl-devel.git`.
+  Tries are also in the newer `worklist` branch of `swipl-devel.git`,
+  which is probably a better choice.
+  - **builtin-worklist** uses both the builtin tries and a builtin
+  representation for the worklist, storing all non-backtrackable
+  data in C.  Requires the `worklist` branch of `swipl-devel.git`.
+  This version is between 4 and 15 times faster than the **master**
+  version above and uses a lot less memory.
