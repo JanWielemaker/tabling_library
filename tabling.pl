@@ -64,8 +64,12 @@ start_tabling(Wrapper,Worker) :-
 	(   Status == complete
 	->  trie_gen(Trie, Wrapper, _)
 	;   (   '$tbl_scheduling_component'(false, true)
-	    ->  run_leader(Wrapper, Worker, Trie),
-		trie_gen(Trie, Wrapper, _)
+	    ->  catch(run_leader(Wrapper, Worker, Trie), E, true),
+	        (   var(E)
+		->  trie_gen(Trie, Wrapper, _)
+		;   '$tbl_table_discard_all',
+		    throw(E)
+		)
 	    ;   run_follower(Status, Wrapper, Worker, Trie)
 	    )
 	).
