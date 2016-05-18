@@ -37,6 +37,7 @@
 	    current_table/2,		% ?Variant, ?Table
 
 	    abolish_all_tables/0,
+	    abolish_table_subgoals/1,	% :Subgoal
 
 	    (table)/1,			% +PI ...
 	    op(1150, fx, table)
@@ -46,18 +47,8 @@
 :- use_module(library(debug)).
 
 :- meta_predicate
-	start_tabling(+, 0).
-
-%%	abolish_all_tables
-%
-%	Remove all tables.  Should not be called when tabling is in
-%	progress.
-%
-%	@bug	Check whether tabling is in progress
-
-abolish_all_tables :-
-	'$tbl_abolish_all_tables'.
-
+	start_tabling(+, 0),
+	abolish_table_subgoals(:).
 
 start_tabling(Wrapper,Worker) :-
 	'$tbl_variant_table'(Wrapper, Trie, Status),
@@ -121,9 +112,33 @@ dep(Answer, dependency(Answer, Continuation, call_info(Wrapper, TargetTable)),
     Wrapper, Continuation,TargetTable).
 
 
+		 /*******************************
+		 *	      CLEANUP		*
+		 *******************************/
+
+%%	abolish_all_tables
+%
+%	Remove all tables.  Should not be called when tabling is in
+%	progress.
+%
+%	@bug	Check whether tabling is in progress
+
+abolish_all_tables :-
+	'$tbl_abolish_all_tables'.
+
+%%	abolish_table_subgoals(:Subgoal) is det.
+%
+%	Abolish all tables that unify with SubGoal.
+
+abolish_table_subgoals(M:SubGoal) :-
+	'$tbl_variant_table'(VariantTrie),
+	current_module(M),
+	forall(trie_gen(VariantTrie, M:SubGoal, Trie),
+	       '$tbl_destroy_table'(Trie)).
+
 
 		 /*******************************
-		 *	   EXAMINE DATA		*
+		 *	  EXAMINE TABLES	*
 		 *******************************/
 
 current_table(Variant, Trie) :-
