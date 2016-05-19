@@ -42,7 +42,6 @@
 :- use_module(library(terms)).
 :- use_module(library(dialect/hprolog)).
 :- use_module(library(lists)).
-:- use_module(table_utils).
 
 :- module_transparent
 	test_expected_variants_present/0,
@@ -221,3 +220,14 @@ expect_lists_equal_sets(E,A,True) :-
 		            Expected list was ~p, actual list was ~p',[E,A]))
   ).
 
+% [X,Y,Z] -> X-Y-Z
+% Empty list. No sensible behaviour. Throw exception.
+list_to_tuple([],_) :- !,
+  type_error(non_empty_list, []).
+% List with at least one element.
+list_to_tuple([First|Rest],Tuple) :-
+  foldl(to_tuple,Rest,First,Tuple).
+
+% E = 'element'
+% Ai = 'accumulator in'
+to_tuple(E,Ai,Ai-E).
