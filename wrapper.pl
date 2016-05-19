@@ -39,6 +39,7 @@
 
 :- multifile
 	system:term_expansion/2,
+	prolog:rename_predicate/2,
 	tabled/2.
 :- dynamic
 	system:term_expansion/2.
@@ -78,20 +79,15 @@ wrappers(Name/Arity) -->
 	  )
 	].
 
-rename(M:Term0, M:Term, _) :-
-	atom(M), !,
-	rename(Term0, Term, M).
-rename((Head :- Body), (NewHead :- Body), Module) :- !,
-	rename(Head, NewHead, Module).
-rename((Head --> Body), (NewHead --> Body), Module) :- !,
-	functor(Head, Name, Arity),
-	PlainArity is Arity+1,
-	functor(PlainHead, Name, PlainArity),
-	tabled(PlainHead, Module),
-	rename_term(Head, NewHead).
-rename(Head, NewHead, Module) :-
-	tabled(Head, Module), !,
-	rename_term(Head, NewHead).
+%%	prolog:rename_predicate(:Head0, :Head) is semidet.
+%
+%	Hook into term_expansion for  post   processing  renaming of the
+%	generated predicate.
+
+prolog:rename_predicate(M:Head0, M:Head) :-
+	writeln(M:Head0),
+	tabled(Head0, M), !,
+	rename_term(Head0, Head).
 
 rename_term(Compound0, Compound) :-
 	compound(Compound0), !,
@@ -107,6 +103,3 @@ system:term_expansion((:- table(Preds)),
 		    | Clauses
 		    ]) :-
 	phrase(wrappers(Preds), Clauses).
-system:term_expansion(Clause, NewClause) :-
-	prolog_load_context(module, Module),
-	rename(Clause, NewClause, Module).
