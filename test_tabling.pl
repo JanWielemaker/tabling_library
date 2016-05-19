@@ -36,7 +36,6 @@
 	  ]).
 :- use_module(tabling).
 :- use_module(testlib).
-:- use_module(testlib2).
 :- use_module(library(plunit)).
 :- use_module(library(debug)).
 

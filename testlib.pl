@@ -31,15 +31,163 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(testlib,
-	  [ compare_real_expected_answers/3	% :Name, +Arity, :E
+:- module(testlib2,
+	  [ test_expected_variants_present/0,
+	    test_tables_cleaned/0,
+	    test_answers_expected_tables/0,
+	    test_answers_for_expected_variant/1,
+	    compare_real_expected_answers/3		% :Name, +Arity, :E
 	  ]).
+:- use_module(tabling).
+:- use_module(library(terms)).
+:- use_module(library(dialect/hprolog)).
 :- use_module(library(lists)).
 :- use_module(table_utils).
-:- use_module(library(dialect/hprolog)).
 
+:- module_transparent
+	test_expected_variants_present/0,
+	test_tables_cleaned/0,
+	test_answers_expected_tables/0.
 :- meta_predicate
+	test_answers_for_expected_variant(:),
 	compare_real_expected_answers(:,+,1).
+
+
+% requires a predicate expected_variants(-List) in the example
+test_expected_variants_present :-
+	context_module(M),
+	test_expected_variants_present(M).
+
+test_expected_variants_present(M) :-
+	M:expected_variants(Xs0),
+	maplist(mqualify(M), Xs0, Xs),
+	test_expected_variants_present_(Xs, True),
+	True \== false,
+	% now all expected variants are present.
+	% next, we check whether there aren't any more present.
+	length(Xs,NumExpected),
+	num_tables(NumActual),
+	assert_equal(NumExpected,NumActual,'test_expected_variants_present').
+
+num_tables(Count) :-
+	'$tbl_variant_table'(Trie),
+	aggregate_all(count, trie_gen(Trie,_,_), Count).
+
+mqualify(M,T,M:T).
+
+% uses "private" predicate from table_datastructure.gpp or table_link_manager.gpp depending on the version.
+test_expected_variants_present_([], _).
+test_expected_variants_present_([X|Xs], True) :-
+	(   current_table(X,_)
+	->  true
+	;   print_message(error, format('Missing table for variant ~p',[X])),
+	    True = false
+	),
+	test_expected_variants_present_(Xs, True).
+
+% test whether all expected tables have received proper cleanup, that is: having the form complete_table/3
+% uses "private" predicate from table_datastructure.gpp or table_link_manager.gpp depending on the version.
+test_tables_cleaned :-
+	context_module(M),
+	M:expected_variants(Xs),
+	test_tables_cleaned_(Xs),
+	% if we get here, write a note to show that we did the test.
+	format('test_tables_cleaned succeeded~n',[]).
+
+test_tables_cleaned_([]).
+test_tables_cleaned_([X|Xs]) :-
+	(   current_table(X,Trie),
+	    '$tbl_table_status'(Trie, complete)
+	->  true
+	;   format('test_tables_cleaned: table for variant ~p did not \c
+	            receive proper cleanup~n',[X]),
+	    throw('test_tables_cleaned: a table did not receive proper cleanup')
+	),
+	test_tables_cleaned_(Xs).
+
+test_answers_expected_tables :-
+	context_module(M),
+	test_answers_expected_tables(M).
+
+test_answers_expected_tables(M) :-
+	M:expected_variants(Xs0),
+	maplist(mqualify(M), Xs0, Xs),
+	test_answers_expected_tables_(Xs, True),
+	True \== false.
+
+test_answers_expected_tables_([], _).
+test_answers_expected_tables_([Variant|Rest], True) :-
+	(   test_answers_for_expected_variant(Variant)
+	->  true
+	;   print_message(error, format('Wrong answers for expected variant ~p',
+					[Variant])),
+	    True = false
+	),
+	test_answers_expected_tables_(Rest, True).
+
+% ATTENTION: works only for ground answers in the tables (which we currently enforce when adding answers as well). To be on the safe side, an exception will be thrown if one of the expected answers is nonground.
+% Requires a predicate expected_answers_for_variant/2 in the example.
+% Uses "private" predicate from table_datastructure.gpp or table_link_manager.gpp depending on the version.
+test_answers_for_expected_variant(M:Variant) :-
+	% We really want a variant check here, not unification...
+	M:expected_answers_for_variant(SomeVariant,ExpectedAnswers0),
+	maplist(mqualify(M), ExpectedAnswers0, ExpectedAnswers),
+	variant(Variant,SomeVariant),
+	current_table(M:Variant, Trie),
+	test_answers_for_variant_(ExpectedAnswers, Trie, True),
+	True \== false,
+	% Now check that there are not more answers than expected
+	length(ExpectedAnswers,NumExpected),
+	get_num_answers(Trie,NumActual),
+	assert_equal(NumExpected,NumActual,'test_answers_for_expected_variant').
+
+% Slow, but only used for testing. We don't need to keep the number of answers at runtime,
+% so we don't keep track of it (for performance).
+get_num_answers(Trie,NumActual) :-
+	aggregate_all(count, trie_gen(Trie,_,_), NumActual).
+
+test_answers_for_variant_([],_Trie, _).
+test_answers_for_variant_([ExpectedAnswer|Rest], Trie, True) :-
+	(   ground(ExpectedAnswer)
+	->  true
+	;   print_message(error, format('Got nonground expected answer ~p, \c
+					 which it cannot handle correctly',
+					[ ExpectedAnswer ])),
+	    True = false
+	),
+	% get_answer => uses unification, so this won't work properly
+	% for nonground answers.
+	(   trie_lookup(Trie,ExpectedAnswer,_)
+	->  true
+	;   print_message(error, format('Missing expected answer ~p',
+					[ExpectedAnswer])),
+	    True = false
+	),
+	test_answers_for_variant_(Rest,Trie,True).
+
+assert_equal(NumExpected,NumActual,ContextualInfo) :-
+	(   NumExpected == NumActual
+	->  true
+	;   print_message(error,
+			  format('assert_equal failed in context of ~w: \c
+			  expected ~w but was ~w~n',
+				 [ContextualInfo,NumExpected,NumActual])),
+	    fail
+	).
+
+
+% G = Name of goal to obtain real answers. Should take A free variables.
+% A = Arity of goal to obtain real answers.
+% E = Name of goal to obtain list of expected answers. Should take one argument.
+compare_real_expected_answers(M:G,A,E) :-
+  call(E,E2),
+  length(FreeVarsList,A),
+  G2 =.. [G|FreeVarsList],
+  list_to_tuple(FreeVarsList,FreeVarsTuple),
+  findall(FreeVarsTuple,M:G2,R),
+  expect_same_size(E2,R,Ok1),
+  expect_lists_equal_sets(E2,R,Ok2),
+  Ok1 == true, Ok2 == true.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % E = list that has the expected number of elements
@@ -68,22 +216,8 @@ expect_lists_equal_sets(E,A,True) :-
 	  list_difference_eq(Es,As,[])
       )
   ->  True = true
-  ;   print_message(error, format('lists do not represent equal sets. \c
-				   Expected list was ~p, actual list was ~p',[E,A]))
+  ;   print_message(error,
+		    format('lists do not represent equal sets. \c
+		            Expected list was ~p, actual list was ~p',[E,A]))
   ).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% G = Name of goal to obtain real answers. Should take A free variables.
-% A = Arity of goal to obtain real answers.
-% E = Name of goal to obtain list of expected answers. Should take one argument.
-compare_real_expected_answers(M:G,A,E) :-
-  call(E,E2),
-  length(FreeVarsList,A),
-  G2 =.. [G|FreeVarsList],
-  list_to_tuple(FreeVarsList,FreeVarsTuple),
-  findall(FreeVarsTuple,M:G2,R),
-  expect_same_size(E2,R,Ok1),
-  expect_lists_equal_sets(E2,R,Ok2),
-  Ok1 == true, Ok2 == true.
