@@ -180,9 +180,9 @@ abolish_table_subgoals(M:SubGoal) :-
 
 current_table(M:Variant, Trie) :-
 	'$tbl_variant_table'(VariantTrie),
-	(   var(Variant)
+	(   (var(Variant) ; var(M))
 	->  trie_gen(VariantTrie, M:Variant, Trie)
-	;   trie_lookup(VariantTrie, Variant, Trie)
+	;   trie_lookup(VariantTrie, M:Variant, Trie)
 	).
 
 
@@ -217,7 +217,7 @@ wrappers(Name/Arity) -->
 	  WrappedHead =.. [WrapName|Args],
 	  prolog_load_context(module, Module)
 	},
-	[ table_wrapper:tabled(Head, Module),
+	[ tabling:tabled(Head, Module),
 	  (   Head :-
 		 start_tabling(Module:Head, WrappedHead)
 	  )
@@ -242,7 +242,7 @@ rename_term(Name, WrapName) :-
 
 
 system:term_expansion((:- table(Preds)),
-		    [ (:- multifile(tabling:tabled/2))
-		    | Clauses
-		    ]) :-
+		      [ (:- multifile(tabling:tabled/2))
+		      | Clauses
+		      ]) :-
 	phrase(wrappers(Preds), Clauses).
