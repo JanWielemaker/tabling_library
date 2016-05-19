@@ -32,23 +32,56 @@
 */
 
 :- module(tabling,
-	  [ start_tabling/2,		% +Wrapper, :Worker.
+	  [ (table)/1,			% +PI ...
 
-	    current_table/2,		% ?Variant, ?Table
-
+	    current_table/2,		% :Variant, ?Table
 	    abolish_all_tables/0,
 	    abolish_table_subgoals/1,	% :Subgoal
 
-	    (table)/1,			% +PI ...
+	    start_tabling/2,		% +Wrapper, :Worker.
+
 	    op(1150, fx, table)
 	  ]).
-:- use_module(wrapper).
-:- use_module(library(lists)).
-:- use_module(library(debug)).
+:- use_module(library(error)).
+:- set_prolog_flag(generate_debug_info, false).
 
 :- meta_predicate
 	start_tabling(+, 0),
+	current_table(:, -),
 	abolish_table_subgoals(:).
+
+/** <module> Tabled execution (SLG WAM)
+
+This  library  handled  _tabled_  execution   of  predicates  using  the
+characteristics if the _SLG WAM_. The required suspension is is realised
+using _delimited continuations_ implemented by  reset/3 and shift/1. The
+table space and work lists are part of the SWI-Prolog core.
+
+@author Benoit Desouter
+*/
+
+%%	table(+PredicateIndicators)
+%
+%	Prepare the given PredicateIndicators for   tabling. Can only be
+%	used as a directive. The example   below  prepares the predicate
+%	edge/2 and the non-terminal statement//1 for tabled execution.
+%
+%	  ==
+%	  :- table edge/2, statement//1.
+%	  ==
+
+table(PIList) :-
+	throw(error(context_error(nodirective, table(PIList)), _)).
+
+%%	start_tabling(+Variant, +Implementation)
+%
+%	Execute Implementation using tabling. This  predicate should not
+%	be called directly. The table/1 directive  causes a predicate to
+%	be translated into a renamed implementation   and a wrapper that
+%	involves this predicate.
+%
+%	@compat This interface may change or disappear without notice
+%		from future versions.
 
 start_tabling(Wrapper,Worker) :-
 	'$tbl_variant_table'(Wrapper, Trie, Status),
@@ -141,9 +174,75 @@ abolish_table_subgoals(M:SubGoal) :-
 		 *	  EXAMINE TABLES	*
 		 *******************************/
 
-current_table(Variant, Trie) :-
+%%	current_table(:Variant, -Trie) is nondet.
+%
+%	True when Trie is the answer table for Variant.
+
+current_table(M:Variant, Trie) :-
 	'$tbl_variant_table'(VariantTrie),
 	(   var(Variant)
-	->  trie_gen(VariantTrie, Variant, Trie)
+	->  trie_gen(VariantTrie, M:Variant, Trie)
 	;   trie_lookup(VariantTrie, Variant, Trie)
 	).
+
+
+		 /*******************************
+		 *      WRAPPER GENERATION	*
+		 *******************************/
+
+:- multifile
+	system:term_expansion/2,
+	prolog:rename_predicate/2,
+	tabled/2.
+:- dynamic
+	system:term_expansion/2.
+
+wrappers(Var) -->
+	{ var(Var), !,
+	  instantiation_error(Var)
+	}.
+wrappers((A,B)) --> !,
+	wrappers(A),
+	wrappers(B).
+wrappers(Name//Arity) -->
+	{ atom(Name), integer(Arity), Arity >= 0, !,
+	  Arity1 is Arity+2
+	},
+	wrappers(Name/Arity1).
+wrappers(Name/Arity) -->
+	{ atom(Name), integer(Arity), Arity >= 0, !,
+	  functor(Head, Name, Arity),
+	  atom_concat(Name, ' tabled', WrapName),
+	  Head =.. [Name|Args],
+	  WrappedHead =.. [WrapName|Args],
+	  prolog_load_context(module, Module)
+	},
+	[ table_wrapper:tabled(Head, Module),
+	  (   Head :-
+		 start_tabling(Module:Head, WrappedHead)
+	  )
+	].
+
+%%	prolog:rename_predicate(:Head0, :Head) is semidet.
+%
+%	Hook into term_expansion for  post   processing  renaming of the
+%	generated predicate.
+
+prolog:rename_predicate(M:Head0, M:Head) :-
+	tabled(Head0, M), !,
+	rename_term(Head0, Head).
+
+rename_term(Compound0, Compound) :-
+	compound(Compound0), !,
+	compound_name_arguments(Compound0, Name, Args),
+	atom_concat(Name, ' tabled', WrapName),
+	compound_name_arguments(Compound, WrapName, Args).
+rename_term(Name, WrapName) :-
+	atom_concat(Name, ' tabled', WrapName).
+
+
+system:term_expansion((:- table(Preds)),
+		    [ (:- multifile(tabling:tabled/2))
+		    | Clauses
+		    ]) :-
+	phrase(wrappers(Preds), Clauses).
